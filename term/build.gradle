@@ -74,9 +74,19 @@ dependencies {
     implementation project(':emulatorview')
     implementation project(':libtermexec')
 
-    implementation "androidx.appcompat:appcompat:1.4.2"
+    // NOTE: see
+    //  https://stackoverflow.com/questions/73406969/duplicate-class-androidx-lifecycle-viewmodellazy-found-in-modules-lifecycle-view
+    //  https://stackoverflow.com/questions/69817925/problem-duplicate-class-androidx-lifecycle-viewmodel-found-in-modules
+    // Duplicate class androidx.lifecycle.ViewModelLazy found in modules jetified-lifecycle-viewmodel-ktx-2.3.1-runtime (androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1) and lifecycle-viewmodel-2.5.0-runtime (androidx.lifecycle:lifecycle-viewmodel:2.5.0)
+    // Duplicate class androidx.lifecycle.ViewTreeViewModelKt found in modules jetified-lifecycle-viewmodel-ktx-2.3.1-runtime (androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1) and lifecycle-viewmodel-2.5.0-runtime (androidx.lifecycle:lifecycle-viewmodel:2.5.0)
+    // Go to the documentation to learn how to Fix dependency resolution errors.
+    implementation "androidx.appcompat:appcompat:1.5.1"
     implementation "com.google.android.material:material:1.4.0"
-    implementation "androidx.preference:preference:1.2.0"
+    implementation ("androidx.preference:preference:1.2.0") {
+        // work-around for duplicate class and appcompat 1.5.*
+        exclude group: 'androidx.lifecycle', module:'lifecycle-viewmodel'
+        exclude group: 'androidx.lifecycle', module:'lifecycle-viewmodel-ktx'
+    }
     implementation "androidx.annotation:annotation:1.5.0"
 }
 
