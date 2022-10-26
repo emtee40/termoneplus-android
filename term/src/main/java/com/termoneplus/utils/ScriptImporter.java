@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2021-2022 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,7 @@ import com.termoneplus.R;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
+import java.io.OutputStream;
 
 import androidx.appcompat.app.AppCompatActivity;
 import jackpal.androidterm.emulatorview.TermSession;
@@ -44,22 +40,7 @@ public class ScriptImporter {
                 InputStream inraw = activity.getContentResolver().openInputStream(uri);
                 if (inraw == null) throw new IOException("null script input stream");
 
-                /* Android note: The Android platform default is always UTF-8. */
-                Charset cs = Charset.defaultCharset();
-                CharsetDecoder csdec = cs.newDecoder()
-                        .onMalformedInput(CodingErrorAction.REPORT)
-                        .onUnmappableCharacter(CodingErrorAction.REPORT);
-                InputStreamReader in = new InputStreamReader(inraw, csdec);
-
-                OutputStreamWriter out = new OutputStreamWriter(session.getTermOut());
-
-                char[] buf = new char[2048];
-                while (true) {
-                    int count = in.read(buf, 0, buf.length);
-                    if (count < 0) break;
-                    out.write(buf, 0, count);
-                }
-                out.flush();
+                copyStream(inraw, session.getTermOut());
             } catch (IOException e) {
                 activity.runOnUiThread(() -> {
                     Toast toast = Toast.makeText(activity.getApplicationContext(),
@@ -70,5 +51,15 @@ public class ScriptImporter {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private static void copyStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buf = new byte[4 * 1024];
+        while (true) {
+            int count = in.read(buf, 0, buf.length);
+            if (count < 0) break;
+            out.write(buf, 0, count);
+        }
+        out.flush();
     }
 }
