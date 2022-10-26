@@ -107,7 +107,7 @@ public class TermService extends Service {
             session.finish();
         }
         mTermSessions.clear();
-        stopForeground(true);
+        StopForeground.stop(this);
     }
 
     public int getSessionCount() {
@@ -197,6 +197,32 @@ public class TermService extends Service {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /*API level 23*/)
                 flags |= PendingIntent.FLAG_IMMUTABLE;
             return PendingIntent.getActivity(context, requestCode, intent, flags);
+        }
+    }
+
+
+    private static class StopForeground {
+        private static void stop(Service service) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N /*API level 24*/)
+                Compat24.stop(service);
+            else
+                Compat5.stop(service);
+        }
+
+        @RequiresApi(24)
+        private static class Compat24 {
+            private static void stop(Service service) {
+                service.stopForeground(STOP_FOREGROUND_REMOVE);
+            }
+        }
+
+        // Explicitly suppress deprecation warnings
+        // "stopForeground(boolean) in Service has been deprecated" in API level 33
+        @SuppressWarnings({"deprecation", "RedundantSuppression"})
+        private static class Compat5 {
+            private static void stop(Service service) {
+                service.stopForeground(true);
+            }
         }
     }
 
