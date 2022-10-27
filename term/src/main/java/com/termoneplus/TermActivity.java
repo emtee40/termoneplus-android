@@ -46,7 +46,8 @@ public class TermActivity extends jackpal.androidterm.Term {
     private void doPasteScript() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
                 .setType("text/*")
-                .putExtra("CONTENT_TYPE", "text/x-shellscript");
+                .putExtra("CONTENT_TYPE", "text/x-shellscript")
+                .putExtra("TITLE", R.string.script_intent_title);
         try {
             request_paste_script.launch(intent);
         } catch (ActivityNotFoundException ignore) {
