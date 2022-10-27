@@ -204,6 +204,7 @@
     <string name="use_keyboard_shortcuts_summary_off">Keyboard shortcuts disabled.</string>
 
     <string name="script_import_error">Cannot read selected script</string>
+    <string name="script_access_error">Cannot access selected script</string>
     <string name="script_source_content_error">No activity found to handle action \"Get Content\"</string>
 
     <string name="help">Help</string>

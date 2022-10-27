@@ -212,6 +212,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="use_keyboard_shortcuts_summary_off">Забрана на бързи клавиши</string>
 
     <string name="script_import_error">Не може да се прочете избраният скрипт</string>
+    <string name="script_access_error">Не е достъпен избраният скрипт</string>
     <string name="script_source_content_error">Липсва дейност, която да подаде съдържание, т.е. за действието \"Get Content\"</string>
 
     <string name="help">Помощ</string>

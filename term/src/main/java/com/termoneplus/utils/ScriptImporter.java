@@ -41,16 +41,23 @@ public class ScriptImporter {
                 if (inraw == null) throw new IOException("null script input stream");
 
                 copyStream(inraw, session.getTermOut());
-            } catch (IOException e) {
+            } catch (IOException ignore) {
                 activity.runOnUiThread(() -> {
-                    Toast toast = Toast.makeText(activity.getApplicationContext(),
-                            R.string.script_import_error, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP, 0, 0);
-                    toast.show();
+                    showError(activity, R.string.script_import_error);
                 });
-                e.printStackTrace();
+            } catch (SecurityException ignore) {
+                activity.runOnUiThread(() -> {
+                    showError(activity, R.string.script_access_error);
+                });
             }
         }).start();
+    }
+
+    private static void showError(AppCompatActivity activity, int rid) {
+        Toast toast = Toast.makeText(activity.getApplicationContext(),
+                rid, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.show();
     }
 
     private static void copyStream(InputStream in, OutputStream out) throws IOException {
