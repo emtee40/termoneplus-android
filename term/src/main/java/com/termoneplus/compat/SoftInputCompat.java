@@ -32,10 +32,10 @@ public class SoftInputCompat {
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // TODO: to use only API 31-33 compatible code
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S /*API level 31*/)
-            Compat.toggle(imm);
-        else
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S /*API level 31*/)
             Compat31.toggle(view, imm);
+        else
+            Compat3.toggle(imm);
     }
 
     private static boolean isSoftInputVisible(View view) {
@@ -53,14 +53,6 @@ public class SoftInputCompat {
     }
 
 
-    private static class Compat {
-        @SuppressWarnings({"deprecation", "RedundantSuppression"})
-        private static void toggle(InputMethodManager imm) {
-            // Toggle method was deprecated in API level 31.
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        }
-    }
-
     private static class Compat31 {
         private static void toggle(View view, InputMethodManager imm) {
             if (isSoftInputVisible(view)) {
@@ -71,6 +63,14 @@ public class SoftInputCompat {
                 // NOTE: SHOW_FORCED was deprecated in API level 33.
                 imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
             }
+        }
+    }
+
+    private static class Compat3 {
+        @SuppressWarnings({"deprecation", "RedundantSuppression"})
+        private static void toggle(InputMethodManager imm) {
+            // Toggle method was deprecated in API level 31.
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
 }
