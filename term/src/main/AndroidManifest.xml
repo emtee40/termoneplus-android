@@ -189,6 +189,9 @@
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <!--
+            Do not activate pick action with mime-type!
+            Left action only for applications that specify precise mime-type.
             <intent-filter>
                 <action android:name="android.intent.action.PICK"/>
 
@@ -196,6 +199,7 @@
 
                 <data android:mimeType="*/*"/>
             </intent-filter>
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT"/>
 
