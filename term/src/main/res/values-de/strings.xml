@@ -229,7 +229,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="use_keyboard_shortcuts_summary_on">(Strg-Tab: Fenster wechseln, Strg-Umschalt-N: Neues Fenster, Strg-Umschalt-V: Einfügen)</string>
     <string name="use_keyboard_shortcuts_summary_off">(Tastenkombinationen sind deaktiviert)</string>
 
+    <string name="script_intent_title">Skript auswählen</string>
     <string name="script_import_error">Das ausgewählte Skript konnte nicht gelesen werden</string>
+    <string name="script_access_error">Der Zugriff auf das ausgewählte Skript ist nicht möglich</string>
     <string name="script_source_content_error">Es wurde keine App zum Lesen von Inhalten gefunden</string>
 
     <string name="help">Hilfe</string>
