@@ -24,19 +24,7 @@
     android:orientation="vertical"
     tools:context="com.termoneplus.shortcuts.FileSelection">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="?attr/actionBarTheme">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="?attr/actionBarPopupTheme"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/appbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
