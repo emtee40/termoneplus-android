@@ -52,6 +52,7 @@ public class TermActionBar {
     private TermActionBar(AppCompatActivity context, boolean floating) {
         toolbar = context.findViewById(R.id.toolbar);
         context.setSupportActionBar(toolbar);
+        toolbar.setAlpha(floating ? 0.625f : 1.0f);
 
         drawer = context.findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
