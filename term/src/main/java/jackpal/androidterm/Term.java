@@ -88,10 +88,6 @@ import jackpal.androidterm.util.TermSettings;
  */
 public class Term extends AppCompatActivity
         implements UpdateCallback, SharedPreferences.OnSharedPreferenceChangeListener {
-    /**
-     * The name of the ViewFlipper in the resources.
-     */
-    private static final int VIEW_FLIPPER = R.id.view_flipper;
 
     private final ActivityResultLauncher<Intent> request_choose_window =
             registerForActivityResult(
@@ -241,21 +237,8 @@ public class Term extends AppCompatActivity
 
         mActionBarMode = mSettings.actionBarMode();
 
-        path_collected = false;
-        path_collector = new PathCollector(this);
-        path_collector.setOnPathsReceivedListener(() -> {
-            path_collected = true;
-            populateSessions();
-        });
-
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
-
-        TSIntent = new Intent(this, TermService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*API level 26*/)
-            startForegroundService(TSIntent);
-        else
-            startService(TSIntent);
 
         mActionBar = TermActionBar.setTermContentView(this,
                 mActionBarMode == TermSettings.ACTION_BAR_MODE_HIDES);
@@ -273,7 +256,20 @@ public class Term extends AppCompatActivity
         });
         mActionBar.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
-        mViewFlipper = findViewById(VIEW_FLIPPER);
+        mViewFlipper = findViewById(R.id.view_flipper);
+
+        path_collected = false;
+        path_collector = new PathCollector(this);
+        path_collector.setOnPathsReceivedListener(() -> {
+            path_collected = true;
+            populateSessions();
+        });
+
+        TSIntent = new Intent(this, TermService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*API level 26*/)
+            startForegroundService(TSIntent);
+        else
+            startService(TSIntent);
 
         Context app = getApplicationContext();
 
