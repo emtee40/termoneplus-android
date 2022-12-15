@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2015 Steven Luo
- * Copyright (C) 2019 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2022 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,9 @@ public final class RunShortcut extends RemoteInterface {
 
     @Override
     protected void processAction(@NonNull Intent intent, @NonNull String action) {
-        switch (action) {
-            case Application.ACTION_RUN_SHORTCUT:
-                runShortcut(intent);
-                break;
-        }
+        if (!Application.ACTION_RUN_SHORTCUT.equals(action)) return;
+
+        runShortcut(intent);
     }
 
     private void runShortcut(@NonNull Intent intent) {
