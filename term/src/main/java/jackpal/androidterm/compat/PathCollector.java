@@ -54,7 +54,8 @@ public class PathCollector {
 
     public PathCollector(AppCompatActivity context) {
         settings = new PathSettings(context);
-        pending = 0;
+        pending = 2;
+
         BroadcastReceiver receiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -78,13 +79,11 @@ public class PathCollector {
             }
         };
 
-        ++pending;
         Intent broadcast = new Intent(ACTION_PATH_APPEND_BROADCAST);
         broadcast.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendOrderedBroadcast(broadcast, PERMISSION_PATH_APPEND_BROADCAST,
                 receiver, null, AppCompatActivity.RESULT_OK, null, null);
 
-        ++pending;
         broadcast = new Intent(broadcast);
         broadcast.setAction(ACTION_PATH_PREPEND_BROADCAST);
         context.sendOrderedBroadcast(broadcast, PERMISSION_PATH_PREPEND_BROADCAST,
