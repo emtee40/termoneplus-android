@@ -27,6 +27,9 @@ import android.view.inputmethod.InputMethodManager;
 public class SoftInputCompat {
 
     public static void toggle(View view) {
+        // check if current terminal view object is missing
+        if (view == null) return;
+
         Context context = view.getContext();
         InputMethodManager imm = (InputMethodManager)
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
