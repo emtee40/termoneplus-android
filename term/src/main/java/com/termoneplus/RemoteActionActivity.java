@@ -75,8 +75,7 @@ public class RemoteActionActivity extends AppCompatActivity {
             processIntent();
         });
 
-        service_intent = new Intent(this, TermService.class);
-        startService(service_intent);
+        service_intent = TermService.start(this);
     }
 
     @Override

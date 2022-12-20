@@ -265,11 +265,7 @@ public class Term extends AppCompatActivity
             populateSessions();
         });
 
-        TSIntent = new Intent(this, TermService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*API level 26*/)
-            startForegroundService(TSIntent);
-        else
-            startService(TSIntent);
+        TSIntent = TermService.start(this);
 
         Context app = getApplicationContext();
 

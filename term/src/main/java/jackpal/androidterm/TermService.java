@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2021 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,6 @@ import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-
 import com.termoneplus.Application;
 import com.termoneplus.R;
 import com.termoneplus.TermActivity;
@@ -50,6 +47,8 @@ import com.termoneplus.services.CommandService;
 
 import java.util.UUID;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 import jackpal.androidterm.emulatorview.TermSession;
 import jackpal.androidterm.libtermexec.v1.ITerminal;
 import jackpal.androidterm.util.SessionList;
@@ -62,6 +61,10 @@ public class TermService extends Service {
     private final IBinder mTSBinder = new TSBinder();
     private final SessionList mTermSessions = new SessionList();
     private CommandService command_service;
+
+    public static Intent start(Context context) {
+        return StartServiceCompat.start(context);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -200,6 +203,30 @@ public class TermService extends Service {
         }
     }
 
+
+    private static class StartServiceCompat {
+        private static Intent start(Context context) {
+            Intent intent = new Intent(context, TermService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*API level 26*/)
+                Compat26.start(context, intent);
+            else
+                Compat.start(context, intent);
+            return intent;
+        }
+
+        @RequiresApi(26)
+        private static class Compat26 {
+            private static void start(Context context, Intent intent) {
+                context.startForegroundService(intent);
+            }
+        }
+
+        private static class Compat {
+            private static void start(Context context, Intent intent) {
+                context.startService(intent);
+            }
+        }
+    }
 
     private static class StopForeground {
         private static void stop(Service service) {
