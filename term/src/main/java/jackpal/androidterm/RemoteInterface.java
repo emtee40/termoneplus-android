@@ -100,9 +100,7 @@ public class RemoteInterface extends RemoteActionActivity {
             String handle = UUID.randomUUID().toString();
             ((GenericTermSession) session).setHandle(handle);
 
-            Intent intent = new Intent(this, TermActivity.class)
-                    .setAction(Application.ACTION_OPEN_NEW_WINDOW)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = TermActivity.getNewWindowIntent(this);
             startActivity(intent);
 
             return handle;
@@ -136,9 +134,7 @@ public class RemoteInterface extends RemoteActionActivity {
             target.write('\r');
         }
 
-        Intent intent = new Intent(this, TermActivity.class)
-                .setAction(Application.ACTION_SWITCH_WINDOW)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        Intent intent = TermActivity.getSwitchWindowIntent(this)
                 .putExtra(Application.ARGUMENT_TARGET_WINDOW, index);
         startActivity(intent);
 

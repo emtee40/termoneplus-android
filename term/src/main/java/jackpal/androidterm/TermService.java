@@ -145,8 +145,7 @@ public class TermService extends Service {
     private Notification buildNotification() {
         NotificationChannelCompat.create(this);
 
-        Intent notifyIntent = new Intent(this, TermActivity.class);
-        notifyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent notifyIntent = TermActivity.getNotificationIntent(this);
         PendingIntent pendingIntent = ActivityPendingIntent.get(this, 0, notifyIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,

@@ -89,6 +89,9 @@ import jackpal.androidterm.util.TermSettings;
 public class Term extends AppCompatActivity
         implements UpdateCallback, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    protected static final String WINDOW_ACTION_NEW = "internal.NEW_WINDOW";
+    protected static final String WINDOW_ACTION_SWITCH = "internal.SWITCH_WINDOW";
+
     private final ActivityResultLauncher<Intent> request_choose_window =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -637,32 +640,36 @@ public class Term extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent); // make static code analysis tool happy
         if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
             // Don't repeat action if intent comes from history
             return;
         }
 
+        if (!Application.ID.equals(intent.getComponent().getPackageName())) {
+            /* not from application */
+            return;
+        }
+
         String action = intent.getAction();
-        if (TextUtils.isEmpty(action) ||
-                /* not from application */
-                !intent.getComponent().getPackageName().equals(Application.ID)) {
+        if (TextUtils.isEmpty(action)) {
+            // TODO: always define action?
             return;
         }
 
         // huge number simply opens new window
         // TODO: add a way to restrict max number of windows per caller (possibly via reusing BoundSession)
         switch (action) {
-            case Application.ACTION_OPEN_NEW_WINDOW:
+            case WINDOW_ACTION_NEW:
                 onResumeSelectWindow = Integer.MAX_VALUE;
                 break;
-            case Application.ACTION_SWITCH_WINDOW:
+            case WINDOW_ACTION_SWITCH:
                 int target = intent.getIntExtra(Application.ARGUMENT_TARGET_WINDOW, -1);
                 if (target >= 0) {
                     onResumeSelectWindow = target;
                 }
                 break;
         }
-        super.onNewIntent(intent);
     }
 
     @Override

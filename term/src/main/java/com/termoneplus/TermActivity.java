@@ -17,6 +17,7 @@
 package com.termoneplus;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.ContextMenu;
@@ -36,12 +37,31 @@ import jackpal.androidterm.emulatorview.TermSession;
 
 
 public class TermActivity extends jackpal.androidterm.Term {
+
     private final ActivityResultLauncher<Intent> request_paste_script =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> onRequestPasteScript(result.getResultCode(), result.getData())
             );
 
+    private static Intent getTermActivityIntent(Context context) {
+        return new Intent(context, TermActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    public static Intent getNewWindowIntent(Context context) {
+        return getTermActivityIntent(context)
+                .setAction(WINDOW_ACTION_NEW);
+    }
+
+    public static Intent getSwitchWindowIntent(Context context) {
+        return getTermActivityIntent(context)
+                .setAction(WINDOW_ACTION_SWITCH);
+    }
+
+    public static Intent getNotificationIntent(Context context) {
+        return getTermActivityIntent(context);
+    }
 
     private void doPasteScript() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
