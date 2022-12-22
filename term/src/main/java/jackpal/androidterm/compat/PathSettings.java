@@ -47,7 +47,7 @@ public class PathSettings {
         extractPreferences(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
-    public void extractPreferences(SharedPreferences prefs) {
+    public static void extractPreferences(SharedPreferences prefs) {
         path_verify = prefs.getBoolean("verify_path", path_verify);
     }
 

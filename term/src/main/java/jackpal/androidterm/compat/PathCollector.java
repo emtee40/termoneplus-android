@@ -48,12 +48,11 @@ public class PathCollector {
     private static final String PERMISSION_PATH_APPEND_BROADCAST = BuildConfig.APPLICATION_ID + ".permission.APPEND_TO_PATH";
     private static final String PERMISSION_PATH_PREPEND_BROADCAST = BuildConfig.APPLICATION_ID + ".permission.PREPEND_TO_PATH";
 
-    private final PathSettings settings;
     private int pending;
     private OnPathsReceivedListener callback;
 
     public PathCollector(AppCompatActivity context) {
-        settings = new PathSettings(context);
+        final PathSettings settings = new PathSettings(context);
         pending = 2;
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -112,7 +111,7 @@ public class PathCollector {
     }
 
     public void extractPreferences(SharedPreferences prefs) {
-        settings.extractPreferences(prefs);
+        PathSettings.extractPreferences(prefs);
     }
 
     public void setOnPathsReceivedListener(OnPathsReceivedListener listener) {
