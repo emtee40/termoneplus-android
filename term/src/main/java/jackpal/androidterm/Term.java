@@ -104,7 +104,6 @@ public class Term extends AppCompatActivity
     private TermViewFlipper mViewFlipper;
     private SessionList mTermSessions;
     private TermSettings mSettings;
-    private PathCollector path_collector;
     private boolean mAlreadyStarted = false;
     private boolean mStopServiceOnFinish = false;
     private Intent TSIntent;
@@ -223,7 +222,7 @@ public class Term extends AppCompatActivity
         }
 
         mSettings.readPrefs(this, sharedPreferences);
-        path_collector.extractPreferences(sharedPreferences);
+        PathCollector.extractPreferences(sharedPreferences);
     }
 
     @Override
@@ -231,6 +230,7 @@ public class Term extends AppCompatActivity
         super.onCreate(icicle);
 
         Log.v(Application.APP_TAG, "onCreate");
+        path_collected = false;
         mHandler = new Handler(getMainLooper());
 
         if (icicle == null)
@@ -261,12 +261,13 @@ public class Term extends AppCompatActivity
 
         mViewFlipper = findViewById(R.id.view_flipper);
 
-        path_collected = false;
-        path_collector = new PathCollector(this);
-        path_collector.setOnPathsReceivedListener(() -> {
-            path_collected = true;
-            populateSessions();
-        });
+        if (!path_collected) {
+            final PathCollector path_collector = new PathCollector(this);
+            path_collector.setOnPathsReceivedListener(() -> {
+                path_collected = true;
+                populateSessions();
+            });
+        }
 
         TSIntent = TermService.start(this);
 
@@ -662,12 +663,22 @@ public class Term extends AppCompatActivity
         switch (action) {
             case WINDOW_ACTION_NEW:
                 onResumeSelectWindow = Integer.MAX_VALUE;
+                /* TODO: Note used in remote actions "send", "run script" and "run shortcut"
+                 *  when "window handle" argument is not provided.
+                 *  Paths are collected by remote action.
+                 */
+                path_collected = true;
                 break;
             case WINDOW_ACTION_SWITCH:
                 int target = intent.getIntExtra(Application.ARGUMENT_TARGET_WINDOW, -1);
                 if (target >= 0) {
                     onResumeSelectWindow = target;
                 }
+                /* TODO: Note used in remote actions "run script" and "run shortcut"
+                 *  when "window handle" is passed as argument.
+                 *  Paths are collected by remote action.
+                 */
+                path_collected = true;
                 break;
         }
     }
