@@ -15,7 +15,7 @@
  * limitations under the License.
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="text_margin">16dp</dimen>
     <dimen name="text2_margin">8dp</dimen>
     <dimen name="text4_margin">4dp</dimen>
@@ -24,4 +24,8 @@
     <dimen name="activity_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Default radius for CardView corners. -->
+    <dimen name="cardview_default_radius" tools:override="true">6dp</dimen>
+    <!-- Elevation value to use for CardViews. Pre-L, it is equal to shadow size. -->
+    <dimen name="cardview_default_elevation" tools:override="true">3dp</dimen>
 </resources>

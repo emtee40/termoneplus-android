@@ -22,6 +22,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import com.termoneplus.utils.ThemeManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,6 +61,11 @@ public class RemoteActionActivity extends AppCompatActivity {
 
 
     @Override
+    public void setTheme(int resid) {
+        super.setTheme(ThemeManager.presetTheme(this, false, resid));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -68,6 +77,18 @@ public class RemoteActionActivity extends AppCompatActivity {
         }
 
         mSettings = new TermSettings(this);
+
+        setContentView(R.layout.activity_remote_action);
+        {
+            View view = findViewById(R.id.progress);
+            view.setAlpha(1.0f);
+        }
+        {
+            // TODO: Note path collection is deprecated.
+            TextView msg = findViewById(R.id.progress_message);
+            msg.setText(R.string.path_collection_progress);
+        }
+
         PathCollector path_collector = new PathCollector(this);
         path_collector.setOnPathsReceivedListener(() -> {
             path_collected = true;
