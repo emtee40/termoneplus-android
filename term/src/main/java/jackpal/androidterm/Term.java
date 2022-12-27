@@ -222,7 +222,7 @@ public class Term extends AppCompatActivity
         }
 
         mSettings.readPrefs(this, sharedPreferences);
-        PathCollector.extractPreferences(sharedPreferences);
+        PathCollector.extractPreferences(this, sharedPreferences);
     }
 
     @Override

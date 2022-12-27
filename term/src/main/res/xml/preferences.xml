@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2008 The Android Open Source Project
-     Copyright (C) 2018-2020 Roumen Petrov.  All rights reserved.
+     Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -228,7 +228,7 @@
 
         <CheckBoxPreference
             android:defaultValue="@bool/pref_verify_path_default"
-            android:key="verify_path"
+            android:key="@string/key_verify_path_preference"
             android:summary="@string/summary_verify_path_preference"
             android:title="@string/title_verify_path_preference"/>
 

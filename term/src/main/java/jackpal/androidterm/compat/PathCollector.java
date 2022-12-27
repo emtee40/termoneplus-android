@@ -110,8 +110,8 @@ public class PathCollector {
         return path.substring(0, path.length() - 1);
     }
 
-    public static void extractPreferences(SharedPreferences prefs) {
-        PathSettings.extractPreferences(prefs);
+    public static void extractPreferences(Context context, SharedPreferences prefs) {
+        PathSettings.extractPreferences(context, prefs);
     }
 
     public void setOnPathsReceivedListener(OnPathsReceivedListener listener) {

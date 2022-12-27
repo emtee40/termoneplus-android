@@ -38,17 +38,21 @@ public class PathSettings {
     private static String mAppendPath = null;
 
     // extracted from SharedPreferences
-    private static boolean path_verify;
+    private static boolean verify_path;
 
 
     public PathSettings(Context context) {
         Resources res = context.getResources();
-        path_verify = res.getBoolean(R.bool.pref_verify_path_default);
-        extractPreferences(PreferenceManager.getDefaultSharedPreferences(context));
+        verify_path = res.getBoolean(R.bool.pref_verify_path_default);
+        extractPreferences(context, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
-    public static void extractPreferences(SharedPreferences prefs) {
-        path_verify = prefs.getBoolean("verify_path", path_verify);
+    public static void extractPreferences(Context context, SharedPreferences prefs) {
+        Resources res = context.getResources();
+        String key;
+
+        key = res.getString(R.string.key_verify_path_preference);
+        verify_path = prefs.getBoolean(key, verify_path);
     }
 
     public static String getPrependPath() {
@@ -71,7 +75,7 @@ public class PathSettings {
         String path = System.getenv("PATH");
         if (path == null) path = "";
         path = extendPath(path);
-        if (path_verify)
+        if (verify_path)
             path = preservePath(path);
         return path;
     }
