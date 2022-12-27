@@ -263,10 +263,13 @@ public class Term extends AppCompatActivity
 
         if (!path_collected) {
             final PathCollector path_collector = new PathCollector(this);
-            path_collector.setOnPathsReceivedListener(() -> {
+            if (path_collector.usePathCollection())
+                path_collector.setOnPathsReceivedListener(() -> {
+                    path_collected = true;
+                    populateSessions();
+                });
+            else
                 path_collected = true;
-                populateSessions();
-            });
         }
 
         TSIntent = TermService.start(this);

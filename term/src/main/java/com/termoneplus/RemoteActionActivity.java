@@ -90,11 +90,13 @@ public class RemoteActionActivity extends AppCompatActivity {
         }
 
         PathCollector path_collector = new PathCollector(this);
-        path_collector.setOnPathsReceivedListener(() -> {
+        if (path_collector.usePathCollection())
+            path_collector.setOnPathsReceivedListener(() -> {
+                path_collected = true;
+                processIntent();
+            });
+        else
             path_collected = true;
-
-            processIntent();
-        });
 
         service_intent = TermService.start(this);
     }

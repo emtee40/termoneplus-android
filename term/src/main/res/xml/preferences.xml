@@ -232,6 +232,12 @@
             android:summary="@string/summary_verify_path_preference"
             android:title="@string/title_verify_path_preference"/>
 
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_collect_path_default"
+            android:key="@string/key_collect_path_preference"
+            android:summary="@string/summary_collect_path_preference"
+            android:title="@string/title_collect_path_preference"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -53,6 +53,8 @@ public class PathCollector {
 
     public PathCollector(AppCompatActivity context) {
         final PathSettings settings = new PathSettings(context);
+        if (!PathSettings.usePathCollection()) return;
+
         pending = 2;
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -112,6 +114,12 @@ public class PathCollector {
 
     public static void extractPreferences(Context context, SharedPreferences prefs) {
         PathSettings.extractPreferences(context, prefs);
+    }
+
+    public boolean usePathCollection() {
+        // Do not use static method as values are initialized internally
+        // by PathCollector constructor or by extractPreferences().
+        return PathSettings.usePathCollection();
     }
 
     public void setOnPathsReceivedListener(OnPathsReceivedListener listener) {

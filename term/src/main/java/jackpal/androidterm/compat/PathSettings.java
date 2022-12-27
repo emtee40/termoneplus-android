@@ -39,11 +39,13 @@ public class PathSettings {
 
     // extracted from SharedPreferences
     private static boolean verify_path;
+    private static boolean collect_path;
 
 
     public PathSettings(Context context) {
         Resources res = context.getResources();
         verify_path = res.getBoolean(R.bool.pref_verify_path_default);
+        collect_path = res.getBoolean(R.bool.pref_collect_path_default);
         extractPreferences(context, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
@@ -53,6 +55,9 @@ public class PathSettings {
 
         key = res.getString(R.string.key_verify_path_preference);
         verify_path = prefs.getBoolean(key, verify_path);
+
+        key = context.getString(R.string.key_collect_path_preference);
+        collect_path = prefs.getBoolean(key, collect_path);
     }
 
     public static String getPrependPath() {
@@ -78,6 +83,10 @@ public class PathSettings {
         if (verify_path)
             path = preservePath(path);
         return path;
+    }
+
+    public static boolean usePathCollection () {
+        return collect_path;
     }
 
     private static String extendPath(String path) {
