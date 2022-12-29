@@ -42,7 +42,7 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 @Deprecated
 public class PathCollector {
-    // NOTE: use termoneplus development broadcasts!
+    // NOTE: use termoneplus broadcasts!
     private static final String ACTION_PATH_APPEND_BROADCAST = BuildConfig.APPLICATION_ID + ".broadcast.APPEND_TO_PATH";
     private static final String ACTION_PATH_PREPEND_BROADCAST = BuildConfig.APPLICATION_ID + ".broadcast.PREPEND_TO_PATH";
     private static final String PERMISSION_PATH_APPEND_BROADCAST = BuildConfig.APPLICATION_ID + ".permission.APPEND_TO_PATH";
@@ -51,9 +51,13 @@ public class PathCollector {
     private int pending;
     private OnPathsReceivedListener callback;
 
-    public PathCollector(AppCompatActivity context) {
+    public void start (Context context) {
         final PathSettings settings = new PathSettings(context);
-        if (!PathSettings.usePathCollection()) return;
+        if (!PathSettings.usePathCollection()) {
+            if (callback != null)
+                callback.onPathsReceived();
+            return;
+        }
 
         pending = 2;
 
@@ -114,12 +118,6 @@ public class PathCollector {
 
     public static void extractPreferences(Context context, SharedPreferences prefs) {
         PathSettings.extractPreferences(context, prefs);
-    }
-
-    public boolean usePathCollection() {
-        // Do not use static method as values are initialized internally
-        // by PathCollector constructor or by extractPreferences().
-        return PathSettings.usePathCollection();
     }
 
     public void setOnPathsReceivedListener(OnPathsReceivedListener listener) {

@@ -262,14 +262,12 @@ public class Term extends AppCompatActivity
         mViewFlipper = findViewById(R.id.view_flipper);
 
         if (!path_collected) {
-            final PathCollector path_collector = new PathCollector(this);
-            if (path_collector.usePathCollection())
-                path_collector.setOnPathsReceivedListener(() -> {
-                    path_collected = true;
-                    populateSessions();
-                });
-            else
+            final PathCollector path_collector = new PathCollector();
+            path_collector.setOnPathsReceivedListener(() -> {
                 path_collected = true;
+                populateSessions();
+            });
+            path_collector.start(this);
         }
 
         TSIntent = TermService.start(this);
