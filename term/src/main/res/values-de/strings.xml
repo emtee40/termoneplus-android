@@ -69,6 +69,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="enable_wifilock">WLAN nie abschalten</string>
     <string name="disable_wifilock">WLAN-Abschaltung erlauben</string>
 
+    <string name="path_collection_progress">Anwendungspfade werden abgefragt …</string>
+
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open">Navigationsleiste öffnen</string>
     <string name="navigation_drawer_close">Navigationsleiste schließen</string>
@@ -166,7 +168,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <string name="title_source_sys_shrc_preference">Systemweite mkshrc einlesen</string>
     <string name="summary_source_sys_shrc_preference">
-        Soll der Inhalt der Shell-Konfigurationsdatei des Systems (/system/etc/mkshrc) übernommen werden?
+        Soll der Inhalt der Shell-Konfigurationsdatei des Systems (/system/etc/mkshrc) vor den festgelegten Shell-Startbefehlen ausgeführt werden?
         (Hängt von der Shell-Kommandozeile ab.)
     </string>
 
@@ -189,6 +191,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="title_verify_path_preference">PATH-Einträge prüfen</string>
     <string name="summary_verify_path_preference">Sollen Verzeichnisse, auf die nicht zugegriffen werden kann, aus $PATH entfernt werden?</string>
 
+    <string name="title_collect_path_preference">PATH-Einträge abfragen</string>
+    <string name="summary_collect_path_preference">Verzeichnisse von anderen Apps abfragen, die als PATH-Einträge hinzugefügt werden sollen.</string>
+
     <string name="title_home_path_preference">HOME-Verzeichnis</string>
     <string name="summary_home_path_preference">Den Pfad zu einem beschreibbaren Verzeichnis festlegen, welches als $HOME genutzt werden soll.</string>
 
@@ -208,11 +213,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="permdesc_grp_term">Wird für den Zugriff auf Terminalemulator-Funktionen verwendet.</string>
 
     <string name="perm_run_script">Beliebige Skripte im Terminalemulator ausführen</string>
-    <string name="permdesc_run_script">Erlaubt es einer App, neue Fenster im Terminalemulator für Android zu öffnen und in diesen Fenstern Befehle mit allen Berechtigungen des Terminalemulators für Android auszuführen, einschließlich des Zugriffs auf das Internet und Ihre SD-Karte.</string>
+    <string name="permdesc_run_script">Erlaubt der App, neue Fenster im Terminalemulator für Android zu öffnen und in diesen Fenstern Befehle mit allen Berechtigungen des Terminalemulators für Android auszuführen, einschließlich des Zugriffs auf das Internet und Ihre SD-Karte.</string>
     <string name="perm_append_to_path">Befehle zum Terminalemulator hinzufügen</string>
-    <string name="permdesc_append_to_path">Erlaubt es einer App, dem Terminalemulator für Android zusätzliche Befehle (und dem $PATH Verzeichnisse) hinzufügen.</string>
+    <string name="permdesc_append_to_path">Erlaubt der App, dem Terminalemulator für Android zusätzliche Befehle (d. h. dem $PATH Verzeichnisse) hinzufügen.</string>
     <string name="perm_prepend_to_path">Befehle im Terminalemulator Überschreiben</string>
-    <string name="permdesc_prepend_to_path">Erlaubt es einer App, bestehende Befehle des Terminalemulators für Android mit eigenen Versionen zu überschreiben (und $PATH Verzeichnisse voranzustellen).</string>
+    <string name="permdesc_prepend_to_path">Erlaubt der App, bestehende Befehle im Terminalemulator für Android mit eigenen Versionen zu überschreiben (d. h. dem $PATH Verzeichnisse voranzustellen).</string>
 
     <string name="email_transcript_subject">Vom Terminalemulator für Android</string>
     <string name="email_transcript_chooser_title">E-Mail verschicken mit:</string>
