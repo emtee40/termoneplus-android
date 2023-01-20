@@ -239,4 +239,23 @@
 
     </application>
 
+    <!-- Android 11, API Level 30 -->
+    <queries>
+        <intent>
+            <!-- used to open URLs from terminal screen -->
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="http"/>
+        </intent>
+        <intent>
+            <!-- used to open URLs from terminal screen or menus(to application site), etc -->
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <intent>
+            <!-- used to send email to maintainer  -->
+            <action android:name="android.intent.action.SENDTO"/>
+            <data android:scheme="mailto"/>
+        </intent>
+    </queries>
+
 </manifest>
