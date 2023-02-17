@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,26 @@
 
 package com.termoneplus;
 
+import android.content.pm.PackageManager;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.termoneplus.compat.PackageManagerCompat;
 import com.termoneplus.utils.ThemeManager;
 
 
 public class AppCompatActivity extends androidx.appcompat.app.AppCompatActivity {
     private Integer theme_resid;
 
+    private int getComponentTheme() throws PackageManager.NameNotFoundException {
+        return PackageManagerCompat.getActivityInfo(getPackageManager(), getComponentName()).theme;
+    }
+
     @Override
     public void setTheme(int resid) {
         boolean actionbar = false;
         try {
-            if (R.style.AppTheme == getPackageManager().
-                    getActivityInfo(getComponentName(), 0).theme)
+            if (R.style.AppTheme == getComponentTheme())
                 actionbar = true;
         } catch (Exception ignore) {
         }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import android.util.Log;
 import com.termoneplus.Application;
 import com.termoneplus.R;
 import com.termoneplus.TermActivity;
+import com.termoneplus.compat.PackageManagerCompat;
 import com.termoneplus.services.CommandService;
 
 import java.util.UUID;
@@ -284,7 +285,7 @@ public class TermService extends Service {
 
             for (String packageName : pkgs) {
                 try {
-                    final PackageInfo pkgInfo = pm.getPackageInfo(packageName, 0);
+                    final PackageInfo pkgInfo = PackageManagerCompat.getPackageInfo(pm, packageName);
 
                     final ApplicationInfo appInfo = pkgInfo.applicationInfo;
                     if (appInfo == null)

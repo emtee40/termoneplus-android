@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2019 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2017-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package com.termoneplus.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+
+import com.termoneplus.compat.PackageManagerCompat;
 
 import java.util.List;
 
@@ -34,8 +35,7 @@ public class WrapOpenURL {
 
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
-        PackageManager pm = context.getPackageManager();
-        List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
+        List<ResolveInfo> activities = queryIntentActivities(context, intent);
 
         if (activities.size() > 0) {
             try {
@@ -82,5 +82,9 @@ public class WrapOpenURL {
                     .setNeutralButton(android.R.string.ok, null)
                     .create().show();
         }
+    }
+
+    private static List<ResolveInfo> queryIntentActivities (Context context, Intent intent) {
+        return PackageManagerCompat.queryIntentActivities(context.getPackageManager(), intent);
     }
 }
