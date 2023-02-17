@@ -19,6 +19,7 @@ package com.termoneplus;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 
+import com.google.android.material.color.DynamicColors;
 import com.termoneplus.utils.ConsoleStartupScript;
 import com.termoneplus.utils.ThemeManager;
 
@@ -79,6 +80,9 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // enable Material3 dynamic colors
+        DynamicColors.applyToActivitiesIfAvailable(this);
 
         rootdir = getFilesDir().getParentFile();
         etcdir = new File(rootdir, "etc");
