@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 Steven Luo
- * Copyright (C) 2019-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package jackpal.androidterm;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.termoneplus.Application;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import jackpal.androidterm.emulatorview.TermSession;
 
 
@@ -66,23 +69,20 @@ public class RemoteInterface extends RemoteActionActivity {
     }
 
     private void processSendAction(@NonNull Intent intent) {
-        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            Object extraStream = intent.getExtras().get(Intent.EXTRA_STREAM);
-            if (extraStream instanceof Uri) {
-                Uri uri = (Uri) extraStream;
-                String scheme = uri.getScheme();
-                if (TextUtils.isEmpty(scheme)) {
-                    openNewWindow(null);
+        Uri uri = ExtraStreamCompat.get(intent);
+        if (uri != null) {
+            String scheme = uri.getScheme();
+            if (TextUtils.isEmpty(scheme)) {
+                openNewWindow(null);
+                return;
+            }
+            switch (scheme) {
+                case "file": {
+                    String path = uri.getPath();
+                    File file = new File(path);
+                    String dirPath = file.isDirectory() ? path : file.getParent();
+                    openNewWindow("cd " + quoteForBash(dirPath));
                     return;
-                }
-                switch (scheme) {
-                    case "file": {
-                        String path = uri.getPath();
-                        File file = new File(path);
-                        String dirPath = file.isDirectory() ? path : file.getParent();
-                        openNewWindow("cd " + quoteForBash(dirPath));
-                        return;
-                    }
                 }
             }
         }
@@ -139,5 +139,36 @@ public class RemoteInterface extends RemoteActionActivity {
         startActivity(intent);
 
         return handle;
+    }
+
+
+    private static class ExtraStreamCompat {
+
+        private static Uri get(Intent intent) {
+            Bundle extras = intent.getExtras();
+            if (extras == null) return null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU /*API level 33*/)
+                return Compat33.get(extras);
+            else
+                return Compat1.get(extras);
+        }
+
+        @RequiresApi(33)
+        private static class Compat33 {
+            private static Uri get(Bundle extras) {
+                return extras.getParcelable(Intent.EXTRA_STREAM, Uri.class);
+            }
+        }
+
+        // Explicitly suppress deprecation warnings
+        // "get(String) in BaseBundle has been deprecated"
+        // Remark: get() was replaced with getParcelable()
+        @SuppressWarnings({"deprecation", "RedundantSuppression"})
+        private static class Compat1 {
+            private static Uri get(Bundle extras) {
+                Object extraStream = extras.getParcelable(Intent.EXTRA_STREAM);
+                return (extraStream instanceof Uri) ? (Uri) extraStream : null;
+            }
+        }
     }
 }
