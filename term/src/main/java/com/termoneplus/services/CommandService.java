@@ -35,9 +35,9 @@ import jackpal.androidterm.compat.PathSettings;
 
 
 public class CommandService implements UnixSocketServer.ConnectionHandler {
-    private static String socket_prefix = BuildConfig.APPLICATION_ID + "-app_info-";
+    private static final String socket_prefix = BuildConfig.APPLICATION_ID + "-app_info-";
 
-    private TermService service;
+    private final TermService service;
     private UnixSocketServer socket;
 
     public CommandService(TermService service) {
@@ -68,15 +68,20 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         String line = in.readLine();
         if (TextUtils.isEmpty(line)) return;
 
-        PrintStream out = new PrintStream(baseout);
         switch (line) {
             case "get aliases":
-                // force interactive shell
-                out.println("alias sh='sh -i'");
-
-                printExternalAliases(out);
+                printAliases(baseout);
                 break;
         }
+    }
+
+    private void printAliases(OutputStream baseout) {
+        PrintStream out = new PrintStream(baseout);
+
+        // force interactive shell
+        out.println("alias sh='sh -i'");
+
+        printExternalAliases(out);
         out.flush();
     }
 
