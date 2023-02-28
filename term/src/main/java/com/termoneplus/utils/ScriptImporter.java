@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2021-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import com.termoneplus.R;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import androidx.appcompat.app.AppCompatActivity;
 import jackpal.androidterm.emulatorview.TermSession;
@@ -40,7 +39,7 @@ public class ScriptImporter {
                 InputStream inraw = activity.getContentResolver().openInputStream(uri);
                 if (inraw == null) throw new IOException("null script input stream");
 
-                copyStream(inraw, session.getTermOut());
+                Stream.copy(inraw, session.getTermOut());
             } catch (IOException ignore) {
                 activity.runOnUiThread(() -> {
                     showError(activity, R.string.script_import_error);
@@ -58,15 +57,5 @@ public class ScriptImporter {
                 rid, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 0, 0);
         toast.show();
-    }
-
-    private static void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[4 * 1024];
-        while (true) {
-            int count = in.read(buf, 0, buf.length);
-            if (count < 0) break;
-            out.write(buf, 0, count);
-        }
-        out.flush();
     }
 }
