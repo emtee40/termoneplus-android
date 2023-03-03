@@ -3,6 +3,8 @@ plugins {
 }
 
 android {
+    namespace "jackpal.androidterm.emulatorview"
+
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
     defaultConfig {

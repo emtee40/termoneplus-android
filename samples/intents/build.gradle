@@ -3,6 +3,8 @@ plugins {
 }
 
 android {
+    namespace "com.termoneplus.sample.intents"
+
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
     defaultConfig {

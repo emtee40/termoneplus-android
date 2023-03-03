@@ -3,6 +3,8 @@ plugins {
 }
 
 android {
+    namespace "jackpal.androidterm.libtermexec"
+
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
     ndkVersion project.ext.ndkVersion

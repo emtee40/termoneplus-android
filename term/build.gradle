@@ -3,6 +3,8 @@ plugins {
 }
 
 android {
+    namespace "com.termoneplus"
+
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
     ndkVersion project.ext.ndkVersion
