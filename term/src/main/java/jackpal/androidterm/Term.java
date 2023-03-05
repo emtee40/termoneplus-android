@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2017-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2017-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,7 +48,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.termoneplus.AppCompatActivity;
@@ -65,6 +63,7 @@ import com.termoneplus.utils.ConsoleStartupScript;
 import com.termoneplus.utils.SimpleClipboardManager;
 import com.termoneplus.utils.WakeLock;
 import com.termoneplus.utils.WrapOpenURL;
+import com.termoneplus.widget.ScreenMessage;
 
 import java.io.IOException;
 
@@ -303,8 +302,8 @@ public class Term extends AppCompatActivity
             try {
                 mTermService.addSession(createTermSession());
             } catch (IOException e) {
-                Toast.makeText(getApplicationContext(),
-                        "Failed to start terminal session", Toast.LENGTH_LONG).show();
+                ScreenMessage.show(getApplicationContext(),
+                        "Failed to start terminal session");
                 finish();
                 return;
             }
@@ -520,9 +519,8 @@ public class Term extends AppCompatActivity
             confirmCloseWindow();
         } else if (id == R.id.menu_reset) {
             doResetTerminal();
-            Toast toast = Toast.makeText(getApplicationContext(), R.string.reset_toast_notification, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            ScreenMessage.show(getApplicationContext(),
+                    R.string.reset_toast_notification);
         } else if (id == R.id.menu_toggle_soft_keyboard) {
             doToggleSoftKeyboard();
         } else if (id == R.id.menu_toggle_wakelock) {
@@ -573,8 +571,8 @@ public class Term extends AppCompatActivity
             mViewFlipper.addView(view);
             mViewFlipper.setDisplayedChild(mViewFlipper.getChildCount() - 1);
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(),
-                    "Failed to create a session", Toast.LENGTH_SHORT).show();
+            ScreenMessage.show(getApplicationContext(),
+                    "Failed to create a session");
         }
     }
 
@@ -623,8 +621,8 @@ public class Term extends AppCompatActivity
                         mTermService.addSession(session);
                         onResumeSelectWindow = mTermService.getSessionCount() - 1;
                     } catch (IOException e) {
-                        Toast.makeText(this.getApplicationContext(),
-                                "Failed to create a session", Toast.LENGTH_SHORT).show();
+                        ScreenMessage.show(this.getApplicationContext(),
+                                "Failed to create a session");
                         onResumeSelectWindow = -1;
                     }
                 } else
@@ -830,9 +828,8 @@ public class Term extends AppCompatActivity
             startActivity(Intent.createChooser(intent,
                     getString(R.string.email_transcript_chooser_title)));
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(getApplicationContext(),
-                    R.string.email_transcript_no_email_activity_found,
-                    Toast.LENGTH_LONG).show();
+            ScreenMessage.show(getApplicationContext(),
+                    R.string.email_transcript_no_email_activity_found);
         }
     }
 

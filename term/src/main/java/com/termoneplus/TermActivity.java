@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.termoneplus.utils.ScriptImporter;
 import com.termoneplus.utils.ThemeManager;
+import com.termoneplus.widget.ScreenMessage;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -71,10 +70,8 @@ public class TermActivity extends jackpal.androidterm.Term {
         try {
             request_paste_script.launch(intent);
         } catch (ActivityNotFoundException ignore) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    R.string.script_source_content_error, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP, 0, 0);
-            toast.show();
+            ScreenMessage.show(getApplicationContext(),
+                    R.string.script_source_content_error);
         } catch (Exception e) {
             e.printStackTrace();
         }

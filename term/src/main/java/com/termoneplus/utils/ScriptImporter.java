@@ -17,10 +17,9 @@
 package com.termoneplus.utils;
 
 import android.net.Uri;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.termoneplus.R;
+import com.termoneplus.widget.ScreenMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,9 +52,6 @@ public class ScriptImporter {
     }
 
     private static void showError(AppCompatActivity activity, int rid) {
-        Toast toast = Toast.makeText(activity.getApplicationContext(),
-                rid, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP, 0, 0);
-        toast.show();
+        ScreenMessage.show(activity.getApplicationContext(), rid);
     }
 }

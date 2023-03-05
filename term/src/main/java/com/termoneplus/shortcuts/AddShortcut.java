@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2019 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2017-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.termoneplus.Application;
 import com.termoneplus.R;
 import com.termoneplus.utils.TextIcon;
+import com.termoneplus.widget.ScreenMessage;
 
 import java.security.GeneralSecurityException;
 
@@ -142,10 +141,8 @@ public class AddShortcut extends AppCompatActivity {
                     try {
                         request_find_command.launch(pickerIntent);
                     } catch (Exception e) {
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Failed to launch pick action!", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        ScreenMessage.show(getApplicationContext(),
+                                "Failed to launch pick action!");
                     }
                 }
         );

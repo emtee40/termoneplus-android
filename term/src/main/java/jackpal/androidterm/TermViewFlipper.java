@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Steven Luo
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.termoneplus.R;
+import com.termoneplus.widget.ScreenMessage;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,7 +43,6 @@ public class TermViewFlipper extends ViewFlipper implements Iterable<View> {
     final Rect vis = new Rect();
 
     private Context context;
-    private Toast mToast;
     private LinkedList<UpdateCallback> callbacks;
 
     private int mCurWidth;
@@ -153,14 +152,7 @@ public class TermViewFlipper extends ViewFlipper implements Iterable<View> {
             title = ((GenericTermSession) session).getTitle(title);
         }
 
-        if (mToast == null) {
-            mToast = Toast.makeText(context.getApplicationContext(),
-                    title, Toast.LENGTH_SHORT);
-            mToast.setGravity(Gravity.CENTER, 0, 0);
-        } else {
-            mToast.setText(title);
-        }
-        mToast.show();
+        ScreenMessage.show(context.getApplicationContext(), title);
     }
 
     @Override

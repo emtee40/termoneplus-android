@@ -17,11 +17,10 @@
 package com.termoneplus;
 
 import android.content.pm.PackageManager;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.termoneplus.compat.PackageManagerCompat;
 import com.termoneplus.utils.ThemeManager;
+import com.termoneplus.widget.ScreenMessage;
 
 
 public class AppCompatActivity extends androidx.appcompat.app.AppCompatActivity {
@@ -48,11 +47,8 @@ public class AppCompatActivity extends androidx.appcompat.app.AppCompatActivity 
     }
 
     protected void restart(int rid) {
-        if (rid != 0) {
-            Toast toast = Toast.makeText(getApplicationContext(), rid, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
+        if (rid != 0)
+            ScreenMessage.show(getApplicationContext(), rid);
 
         /* Let use function from API level 11
         Intent intent = Intent.makeRestartActivityTask(getComponentName());
