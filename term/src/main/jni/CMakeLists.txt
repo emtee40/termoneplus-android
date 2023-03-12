@@ -19,9 +19,9 @@ project(term-c)
 
 add_executable(
         libexec-t1plus.so
-        main/jni/appcmd.c
-        main/jni/socket.c
-        main/jni/atomicio.c
+        appcmd.c
+        socket.c
+        atomicio.c
 )
 target_compile_definitions(
         libexec-t1plus.so
@@ -41,9 +41,9 @@ target_link_libraries(
 # used if ABI < 16
 add_executable(
         libexeo-t1plus.so
-        main/jni/appcmd.c
-        main/jni/socket.c
-        main/jni/atomicio.c
+        appcmd.c
+        socket.c
+        atomicio.c
 )
 target_compile_definitions(
         libexeo-t1plus.so
