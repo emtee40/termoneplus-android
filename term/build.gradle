@@ -84,7 +84,7 @@ dependencies {
 
 task elfcleaner(type: Exec) {
     // only unix
-    commandLine 'sh', '-c', 'find build/*/stripped* -name lib*.so -exec elf-cleaner {} \\;'
+    commandLine 'sh', '-c', 'find build/*/stripped* -name lib*.so -print0 | xargs -0 -P 0 elf-cleaner'
 }
 
 tasks.whenTaskAdded { task ->
