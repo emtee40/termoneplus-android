@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "appinfo.h"
 
@@ -40,6 +41,8 @@ open_socket(const char *name) {
 
     sock = socket(AF_UNIX, SOCK_STREAM, 0);
     if (sock == -1) {
+        fprintf(stderr, "%s():  socket() fail: %d(%s)\n", __func__,
+                errno, strerror(errno));
         return -1;
     }
 
@@ -53,6 +56,8 @@ open_socket(const char *name) {
     addrlen = (socklen_t) offsetof(struct sockaddr_un, sun_path) + 1 + (socklen_t) namelen;
 
     if (connect(sock, (const struct sockaddr *) &addr, addrlen) == -1) {
+        fprintf(stderr, "%s():  connect() fail: %d(%s)\n", __func__,
+		errno, strerror(errno));
         close(sock);
         return -1;
     }
