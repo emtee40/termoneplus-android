@@ -66,6 +66,14 @@ public class TermSession {
     private static final int NEW_OUTPUT = 2;
     private static final int FINISH = 3;
     private static final int EOF = 4;
+    private final Thread mReaderThread;
+    private final ByteQueue mByteQueue;
+    private final byte[] mReceiveBuffer;
+    private final Thread mWriterThread;
+    private final ByteQueue mWriteQueue;
+    private final CharBuffer mWriteCharBuffer;
+    private final ByteBuffer mWriteByteBuffer;
+    private final CharsetEncoder mUTF8Encoder;
     private ColorScheme mColorScheme = BaseTextRenderer.defaultColorScheme;
     private UpdateCallback mNotify;
     private OutputStream mTermOut;
@@ -73,15 +81,7 @@ public class TermSession {
     private String mTitle;
     private TranscriptScreen mTranscriptScreen;
     private TerminalEmulator mEmulator;
-    private Thread mReaderThread;
-    private ByteQueue mByteQueue;
-    private byte[] mReceiveBuffer;
-    private Thread mWriterThread;
-    private ByteQueue mWriteQueue;
     private Handler mWriterHandler;
-    private CharBuffer mWriteCharBuffer;
-    private ByteBuffer mWriteByteBuffer;
-    private CharsetEncoder mUTF8Encoder;
     private FinishCallback mFinishCallback;
     private boolean mIsRunning = false;
     private UpdateCallback mTitleChangedListener;
@@ -195,28 +195,24 @@ public class TermSession {
      * @param codePoint The Unicode code point to write to the terminal.
      */
     public void write(int codePoint) {
-        ByteBuffer byteBuf = mWriteByteBuffer;
         if (codePoint < 128) {
             // Fast path for ASCII characters
-            byte[] buf = byteBuf.array();
+            byte[] buf = mWriteByteBuffer.array();
             buf[0] = (byte) codePoint;
             write(buf, 0, 1);
             return;
         }
 
-        CharBuffer charBuf = mWriteCharBuffer;
-        CharsetEncoder encoder = mUTF8Encoder;
+        mWriteCharBuffer.clear();
+        int cplen = CharacterCompat.toChars(codePoint, mWriteCharBuffer.array(), 0);
+        mWriteCharBuffer.limit(cplen);
 
-        charBuf.clear();
-        int cplen = CharacterCompat.toChars(codePoint, charBuf.array(), 0);
-        charBuf.limit(cplen);
+        mWriteByteBuffer.clear();
+        mUTF8Encoder.reset();
+        mUTF8Encoder.encode(mWriteCharBuffer, mWriteByteBuffer, true);
+        mUTF8Encoder.flush(mWriteByteBuffer);
 
-        encoder.reset();
-        byteBuf.clear();
-        encoder.encode(charBuf, byteBuf, true);
-        encoder.flush(byteBuf);
-
-        write(byteBuf.array(), 0, byteBuf.position());
+        write(mWriteByteBuffer.array(), 0, mWriteByteBuffer.position());
     }
 
     /* Notify the writer thread that there's new output waiting */
@@ -677,7 +673,7 @@ public class TermSession {
     }
 
     private class WriterThread extends TraceThread {
-        private byte[] buffer = new byte[4096];
+        private final byte[] buffer = new byte[4096];
 
         private WriterThread(String name) {
             super(name);
