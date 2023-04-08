@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -272,10 +272,6 @@ public class TermSession {
         return mIsRunning;
     }
 
-    TranscriptScreen getTranscriptScreen() {
-        return mTranscriptScreen;
-    }
-
     TerminalEmulator getEmulator() {
         return mEmulator;
     }
@@ -365,7 +361,7 @@ public class TermSession {
      * scrollback buffer.
      */
     public String getTranscriptText() {
-        return mTranscriptScreen.getTranscriptText();
+        return mTranscriptScreen == null ? "" : mTranscriptScreen.getTranscriptText();
     }
 
     /**
@@ -528,7 +524,10 @@ public class TermSession {
         }
 
         if (mEmulator != null) mEmulator.finish();
-        if (mTranscriptScreen != null) mTranscriptScreen.finish();
+        if (mTranscriptScreen != null) {
+            mTranscriptScreen.finish(); // Note clears internal "screen data"
+            mTranscriptScreen = null;
+        }
     }
 
     /**
