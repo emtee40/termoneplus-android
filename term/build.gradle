@@ -15,8 +15,8 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        versionCode 430
-        versionName '4.3.0'
+        versionCode 431
+        versionName '4.3.1'
 
         externalNativeBuild {
             cmake {
