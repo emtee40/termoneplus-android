@@ -62,7 +62,7 @@ throwNewException(JNIEnv *env, const char *clazz, const char *msg) {
 }
 
 void
-throwOutOfMemoryError(JNIEnv *env, const char *msg)  {
+throwOutOfMemoryError(JNIEnv *env, const char *msg) {
     throwNewException(env, "java/lang/OutOfMemoryError", msg);
 }
 
@@ -72,7 +72,7 @@ throwIOException(JNIEnv *env, const char *fmt, ...) {
     va_list args;
 
     va_start(args, fmt);
-    (void)vsnprintf(msg, sizeof(msg), fmt, args);
+    (void) vsnprintf(msg, sizeof(msg), fmt, args);
     va_end(args);
 
     throwNewException(env, "java/io/IOException", msg);

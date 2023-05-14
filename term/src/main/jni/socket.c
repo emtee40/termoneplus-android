@@ -57,7 +57,7 @@ open_socket(const char *name) {
 
     if (connect(sock, (const struct sockaddr *) &addr, addrlen) == -1) {
         fprintf(stderr, "%s():  connect() fail: %d(%s)\n", __func__,
-		errno, strerror(errno));
+                errno, strerror(errno));
         close(sock);
         return -1;
     }

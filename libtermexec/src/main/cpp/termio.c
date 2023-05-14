@@ -80,7 +80,7 @@ ioctl_setWindowSize(
  */
     if (ioctl(fd, TIOCSWINSZ, &arg) != 0) {
         throwIOException(env, "ioctl: set tty window size fail / error %d/%s",
-                errno, strerror(errno));
+                         errno, strerror(errno));
     }
 }
 
@@ -88,7 +88,7 @@ ioctl_setWindowSize(
 int
 register_termio(JNIEnv *env) {
     static JNINativeMethod methods[] = {
-            {"setUTF8Input", "(IZ)V", (void *) termios_setUTF8Input},
+            {"setUTF8Input",  "(IZ)V",    (void *) termios_setUTF8Input},
             {"setWindowSize", "(IIIII)V", (void *) ioctl_setWindowSize}
     };
     return register_native(

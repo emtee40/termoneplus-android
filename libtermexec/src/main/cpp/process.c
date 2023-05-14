@@ -40,7 +40,7 @@ dup_jbyteArray(JNIEnv *env, jbyteArray array) {
     len = (*env)->GetArrayLength(env, array);
     if (len < 1) return NULL;
 
-    ret = malloc((size_t)len + 1);
+    ret = malloc((size_t) len + 1);
     if (ret == NULL) return NULL;
 
     jbyte *data = (*env)->GetByteArrayElements(env, array, NULL);
@@ -103,21 +103,21 @@ process_create_subprocess(
 
     if (unlockpt(ptm) < 0) {
         throwIOException(env, "unlockpt fail / error %d/%s",
-                 errno, strerror(errno));
+                         errno, strerror(errno));
         return -1;
     }
 
     memset(devname, 0, sizeof(devname));
     if (ptsname_r(ptm, devname, sizeof(devname)) != 0) {
         throwIOException(env, "ptsname_r fail / error %d/%s",
-                 errno, strerror(errno));
+                         errno, strerror(errno));
         return -1;
     }
 
     pid = fork();
     if (pid < 0) {
         throwIOException(env, "fork fail / error %d/%s",
-                 errno, strerror(errno));
+                         errno, strerror(errno));
         return -1;
     }
 
@@ -134,7 +134,7 @@ process_create_subprocess(
         /* required by TIOCSCTTY */
         if (setsid() < 0) {
             throwIOException(env, "setsid fail / error %d/%s",
-                     errno, strerror(errno));
+                             errno, strerror(errno));
             exit(-1);
         }
 
@@ -142,14 +142,14 @@ process_create_subprocess(
         pts = open(devname, O_RDWR | O_NOCTTY);
         if (pts < 0) {
             throwIOException(env, "open pty fail / error %d/%s",
-                     errno, strerror(errno));
+                             errno, strerror(errno));
             exit(-1);
         }
 
         /* set controlling tty */
         if (ioctl(pts, TIOCSCTTY, 0) < 0) {
             throwIOException(env, "ioctl for TIOCSCTTY fail / error %d/%s",
-                     errno, strerror(errno));
+                             errno, strerror(errno));
             exit(-1);
         }
 
@@ -164,7 +164,7 @@ process_create_subprocess(
         /* NOTE On success, execve() does not return */
         {
             throwIOException(env, "execve fail / error %d/%s",
-                    errno, strerror(errno));
+                             errno, strerror(errno));
             exit(-1);
         }
     }
