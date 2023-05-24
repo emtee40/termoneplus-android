@@ -4,31 +4,13 @@ set -e
 
 cd `dirname $0`
 
-XCFFILE=../docs/termoneplus-launcher-icon.xcf
-
-for MODE in l m h xh xxh xxxh ; do
-  case "$MODE" in
-  l)	dpi=120; continue;; # unused
-  m)	dpi=160;;
-  h)	dpi=240;;
-  xh)	dpi=320;;
-  xxh)	dpi=480;;
-  xxxh)	dpi=640;;
-  *)	dpi=160;;
-  esac
-
+gimp_convert() {
   # launcher icon size = 32 dp * ( dpi / 160 ) * 1.5
   size=`expr $dpi \* 3 / 10`
   xsize=`expr $dpi / 2`
   off=`expr \( $xsize - $size \) / 2`
 
-  qualifier=
-  test -z "$MODE" || qualifier=-"$MODE"dpi
-
-  PNGFILE=mipmap"$qualifier"/ic_launcher_foreground.png
-  echo creating .../$PNGFILE ... >&2
-
-  # Start gimp with python-fu batch-interpreter
+  # start gimp with python-fu batch-interpreter
   gimp -i --batch-interpreter=python-fu-eval -b - << EOF
 import gimpfu
 
@@ -48,4 +30,27 @@ convert('$XCFFILE', '../term/src/main/res/$PNGFILE')
 
 pdb.gimp_quit(1)
 EOF
+}
+
+
+XCFFILE=../docs/termoneplus-launcher-icon.xcf
+
+for MODE in l m h xh xxh xxxh ; do
+  case "$MODE" in
+  l)	dpi=120; continue;; # unused
+  m)	dpi=160;;
+  h)	dpi=240;;
+  xh)	dpi=320;;
+  xxh)	dpi=480;;
+  xxxh)	dpi=640;;
+  *)	dpi=160;;
+  esac
+
+  qualifier=
+  test -z "$MODE" || qualifier=-"$MODE"dpi
+
+  PNGFILE=mipmap"$qualifier"/ic_launcher_foreground.png
+  echo creating .../$PNGFILE ... >&2
+
+  gimp_convert
 done

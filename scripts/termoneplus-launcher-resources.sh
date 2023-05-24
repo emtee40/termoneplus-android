@@ -4,6 +4,31 @@ set -e
 
 cd `dirname $0`
 
+gimp_convert() {
+  # launcher icon size = 32 dp * ( dpi / 160 ) * 1.5
+  size=`expr $dpi \* 3 / 10`
+
+  # start gimp with python-fu batch-interpreter
+  gimp -i --batch-interpreter=python-fu-eval -b - << EOF
+import gimpfu
+
+def convert(xcf_file, png_file):
+    img = pdb.gimp_file_load(xcf_file, xcf_file)
+    layer = pdb.gimp_image_merge_visible_layers(img, 1)
+
+    #pdb.gimp_image_convert_indexed(img, NO_DITHER, MAKE_PALETTE, 255, False, True, '');
+    pdb.gimp_image_scale(img, $size, $size);
+
+    pdb.gimp_file_save(img, layer, png_file, png_file)
+    pdb.gimp_image_delete(img)
+
+convert('$XCFFILE', '../term/src/main/res/$PNGFILE')
+
+pdb.gimp_quit(1)
+EOF
+}
+
+
 for T in n r ; do
 
 case $T in
@@ -23,9 +48,6 @@ for MODE in l m h xh xxh xxxh ; do
   *)	dpi=160;;
   esac
 
-  # launcher icon size = 32 dp * ( dpi / 160 ) * 1.5
-  size=`expr $dpi \* 3 / 10`
-
   qualifier=
   test -z "$MODE" || qualifier=-"$MODE"dpi
 
@@ -35,23 +57,6 @@ for MODE in l m h xh xxh xxxh ; do
   esac
   echo creating .../$PNGFILE ... >&2
 
-  # Start gimp with python-fu batch-interpreter
-  gimp -i --batch-interpreter=python-fu-eval -b - << EOF
-import gimpfu
-
-def convert(xcf_file, png_file):
-    img = pdb.gimp_file_load(xcf_file, xcf_file)
-    layer = pdb.gimp_image_merge_visible_layers(img, 1)
-
-    #pdb.gimp_image_convert_indexed(img, NO_DITHER, MAKE_PALETTE, 255, False, True, '');
-    pdb.gimp_image_scale(img, $size, $size);
-
-    pdb.gimp_file_save(img, layer, png_file, png_file)
-    pdb.gimp_image_delete(img)
-
-convert('$XCFFILE', '../term/src/main/res/$PNGFILE')
-
-pdb.gimp_quit(1)
-EOF
+  gimp_convert
 done
 done
