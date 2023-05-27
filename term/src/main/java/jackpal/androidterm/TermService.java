@@ -89,8 +89,6 @@ public class TermService extends Service {
     public void onCreate() {
         /* Put the service in the foreground. */
         Notification notification = buildNotification();
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-
         startForeground(RUNNING_NOTIFICATION, notification);
 
         command_service = new CommandService(this);
@@ -158,6 +156,7 @@ public class TermService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setTicker(getText(R.string.service_notify_text))
                 .setWhen(System.currentTimeMillis())
+                .setOngoing(true)
                 .setContentIntent(pendingIntent);
         return builder.build();
     }
