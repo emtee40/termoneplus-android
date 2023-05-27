@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,16 @@ import android.util.Log;
 import com.termoneplus.Application;
 import com.termoneplus.Process;
 
-import jackpal.androidterm.compat.PathSettings;
-import jackpal.androidterm.util.TermSettings;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import jackpal.androidterm.compat.PathSettings;
+import jackpal.androidterm.util.TermSettings;
 
 
 /**
@@ -57,7 +59,7 @@ public class ShellTermSession extends GenericTermSession {
 
         mProcId = createShellProcess(settings);
         final Handler handler = new ProcessHandler(this);
-        mWatcherThread  = new Thread(() -> {
+        mWatcherThread = new Thread(() -> {
             Log.i(Application.APP_TAG, "waiting for: " + mProcId);
             int result = Process.waitExit(mProcId);
             Log.i(Application.APP_TAG, "subprocess exited: " + result);
@@ -71,13 +73,13 @@ public class ShellTermSession extends GenericTermSession {
         super.initializeEmulator(columns, rows);
 
         mWatcherThread.start();
-        sendInitialCommand(mInitialCommand);
+        sendInitialCommand();
     }
 
-    private void sendInitialCommand(String initialCommand) {
-        if (initialCommand.length() > 0) {
-            write(initialCommand + '\r');
-        }
+    private void sendInitialCommand() {
+        if (mInitialCommand.length() == 0) return;
+
+        write(mInitialCommand + '\r');
     }
 
     private int createShellProcess(TermSettings settings) throws IOException {
@@ -124,7 +126,7 @@ public class ShellTermSession extends GenericTermSession {
         final int WHITESPACE = 1;
         final int INQUOTE = 2;
         int state = WHITESPACE;
-        ArrayList<String> result =  new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
         int cmdLen = cmd.length();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < cmdLen; i++) {
@@ -132,7 +134,7 @@ public class ShellTermSession extends GenericTermSession {
             if (state == PLAIN) {
                 if (Character.isWhitespace(c)) {
                     result.add(builder.toString());
-                    builder.delete(0,builder.length());
+                    builder.delete(0, builder.length());
                     state = WHITESPACE;
                 } else if (c == '"') {
                     state = INQUOTE;
