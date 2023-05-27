@@ -33,6 +33,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import jackpal.androidterm.compat.PathSettings;
 import jackpal.androidterm.util.TermSettings;
@@ -79,7 +81,14 @@ public class ShellTermSession extends GenericTermSession {
     private void sendInitialCommand() {
         if (mInitialCommand.length() == 0) return;
 
-        write(mInitialCommand + '\r');
+        // wait display of shell prompt (speculative)
+        // before to enter initial commands
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                write(mInitialCommand + '\r');
+            }
+        }, 500);
     }
 
     private int createShellProcess(TermSettings settings) throws IOException {

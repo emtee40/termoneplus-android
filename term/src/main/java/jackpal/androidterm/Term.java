@@ -54,6 +54,7 @@ import com.termoneplus.AppCompatActivity;
 import com.termoneplus.Application;
 import com.termoneplus.Permissions;
 import com.termoneplus.R;
+import com.termoneplus.Settings;
 import com.termoneplus.TermActionBar;
 import com.termoneplus.TermPreferencesActivity;
 import com.termoneplus.WindowListActivity;
@@ -191,7 +192,7 @@ public class Term extends AppCompatActivity
     protected static TermSession createTermSession(Context context, String extraCommand) throws IOException {
         TermSettings settings = new TermSettings(context);
 
-        String initialCommand = !TextUtils.isEmpty(extraCommand) ? extraCommand : "";
+        String initialCommand = Settings.prepareInitialCommand(context, extraCommand);
 
         GenericTermSession session = new ShellTermSession(settings, initialCommand);
         // XXX We should really be able to fetch this from within TermSession

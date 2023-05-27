@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import jackpal.androidterm.emulatorview.ColorScheme;
 
 
@@ -42,19 +44,38 @@ public class Settings {
             new ColorScheme(0xFFDCDCCC, 0xFF2C2C2C) /*dark pastels*/
     };
 
+    private String initial_command;
     private boolean source_sys_shrc;
 
 
+    public Settings(Context context) {
+        this(context, PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()));
+    }
+
     public Settings(Context context, SharedPreferences preferences) {
         Resources r = context.getResources();
+        initial_command = parseString(preferences,
+                context.getString(R.string.key_initialcommand_preference),
+                r.getString(R.string.pref_initialcommand_default));
         source_sys_shrc = parseBoolean(preferences,
                 context.getString(R.string.key_source_sys_shrc_preference),
                 r.getBoolean(R.bool.pref_source_sys_shrc_default));
     }
 
+    @NonNull
+    public static String prepareInitialCommand(Context context, String extraCommand) {
+        Settings settings = new Settings(context);
+        String cmd = settings.initial_command;
+        if (cmd == null /*just in case*/) cmd = "";
+        if (!TextUtils.isEmpty(extraCommand))
+            cmd += "\r" + extraCommand;
+        return cmd;
+    }
+
     public void parsePreference(Context context, SharedPreferences preferences, String key) {
         if (TextUtils.isEmpty(key)) return;
 
+        if (parseInitialCommand(context, preferences, key)) return;
         parseSourceSysRC(context, preferences, key);
     }
 
@@ -68,6 +89,22 @@ public class Settings {
         } catch (Exception ignored) {
         }
         return def;
+    }
+
+    private String parseString(SharedPreferences preferences, String key, String def) {
+        try {
+            return preferences.getString(key, def);
+        } catch (Exception ignored) {
+        }
+        return def;
+    }
+
+    private boolean parseInitialCommand(Context context, SharedPreferences preferences, String key) {
+        String pref = context.getString(R.string.key_initialcommand_preference);
+        if (!key.equals(pref)) return false;
+
+        initial_command = parseString(preferences, key, initial_command);
+        return true;
     }
 
     private void parseSourceSysRC(Context context, SharedPreferences preferences, String key) {

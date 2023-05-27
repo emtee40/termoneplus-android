@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2020-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,11 @@
 
 package com.termoneplus.utils;
 
-import android.text.TextUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 
 
 public class ConsoleStartupScript {
@@ -68,21 +64,5 @@ public class ConsoleStartupScript {
 
     public static File getScriptFile(String homedir) {
         return new File(homedir, ".shrc");
-    }
-
-    public static void migrateInitialCommand(String homedir, String cmd) {
-        if (TextUtils.isEmpty(cmd)) return;
-
-        try {
-            PrintWriter out = new PrintWriter(
-                    new FileWriter(getScriptFile(homedir), true));
-            out.println("");
-            String timestamp = java.text.DateFormat.getDateTimeInstance().format(new Date());
-            out.println("# migrated initial command (" + timestamp + "):");
-            out.println(cmd);
-            out.flush();
-            out.close();
-        } catch (IOException ignored) {
-        }
     }
 }

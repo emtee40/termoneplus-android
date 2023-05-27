@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,6 +144,7 @@
         Depends from shell command line.
     </string>
 
+    <string name="key_initialcommand_preference">initialcommand</string>
     <string name="title_initialcommand_preference">Initial command</string>
     <string name="summary_initialcommand_preference">Sent to the shell when it starts.</string>
     <string name="dialog_title_initialcommand_preference">Initial Command</string>
