@@ -173,6 +173,12 @@ public class TermService extends Service {
         @RequiresApi(26)
         private static class Compat26 {
             private static void create(TermService service) {
+                // Register the channel with the system ...
+                // Note we can't change the importance or other notification behaviors after this.
+                NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
+                if (notificationManager.getNotificationChannel(Application.NOTIFICATION_CHANNEL_SESSIONS) != null)
+                    return;
+
                 NotificationChannel channel = new NotificationChannel(
                         Application.NOTIFICATION_CHANNEL_SESSIONS,
                         "TermOnePlus",
@@ -180,9 +186,6 @@ public class TermService extends Service {
                 channel.setDescription("TermOnePlus running notification");
                 channel.setShowBadge(false);
 
-                // Register the channel with the system ...
-                // Note we can't change the importance or other notification behaviors after this.
-                NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
                 notificationManager.createNotificationChannel(channel);
             }
         }
