@@ -93,7 +93,7 @@ public class RemoteInterface extends RemoteActionActivity {
         TermService service = getTermService();
 
         try {
-            TermSession session = TermActivity.createTermSession(this, mSettings, iInitialCommand);
+            TermSession session = TermActivity.createTermSession(this, iInitialCommand);
 
             service.addSession(session);
 

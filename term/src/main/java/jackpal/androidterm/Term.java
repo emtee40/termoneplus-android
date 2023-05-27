@@ -188,10 +188,8 @@ public class Term extends AppCompatActivity
     };
     private Handler mHandler;
 
-    protected static TermSession createTermSession(
-            Context context,
-            TermSettings settings,
-            String extraCommand) throws IOException {
+    protected static TermSession createTermSession(Context context, String extraCommand) throws IOException {
+        TermSettings settings = new TermSettings(context);
 
         String initialCommand = !TextUtils.isEmpty(extraCommand) ? extraCommand : "";
 
@@ -364,7 +362,7 @@ public class Term extends AppCompatActivity
     }
 
     private TermSession createTermSession() throws IOException {
-        return createTermSession(this, mSettings, null);
+        return createTermSession(this, null);
     }
 
     private TermView createEmulatorView(TermSession session) {
