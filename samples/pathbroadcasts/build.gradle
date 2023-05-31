@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
+// "TermOne Plus" applicationId
+def termApplicationId = "com.termoneplus"
+
 android {
     namespace "jackpal.androidterm.sample.pathbroadcasts"
 
@@ -16,8 +19,8 @@ android {
         versionName '2.1.0'
 
         // TermOnePlus applicationId
-        manifestPlaceholders = [ termApplicationId:"com.termoneplus"]
-        buildConfigField("String", "TERM_APPLICATION_ID", "\"com.termoneplus\"")
+        manifestPlaceholders = [termApplicationId:"${termApplicationId}"]
+        buildConfigField("String", "TERM_APPLICATION_ID", "\"${termApplicationId}\"")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
