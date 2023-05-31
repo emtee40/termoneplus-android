@@ -16,7 +16,7 @@
 -->
 <!--
 Copyright (c) 2017, Tobias Bannert <tobannert@gmail.com>
-Copyright (c) 2022, Ingo Brückl <ib@wupperonline.de>
+Copyright (c) 2022-2023, Ingo Brückl <ib@wupperonline.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -177,7 +177,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="dialog_title_initialcommand_preference">Startbefehl</string>
 
     <string name="title_shellrc_preference">Shell-Start</string>
-    <string name="summary_shellrc_preference">Die Befehle bestimmen, die von der Shell ausgeführt werden, wenn diese startet.</string>
+    <string name="summary_shellrc_preference">Die Befehle festlegen, die von der Shell ausgeführt werden sollen, wenn diese startet.</string>
     <string name="dialog_title_shellrc_preference">Shell-Start</string>
     <string name="hint_shellrc_preference">(Shell-Startbefehle)</string>
 
@@ -192,7 +192,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="summary_verify_path_preference">Sollen Verzeichnisse, auf die nicht zugegriffen werden kann, aus $PATH entfernt werden?</string>
 
     <string name="title_collect_path_preference">PATH-Einträge abfragen</string>
-    <string name="summary_collect_path_preference">Verzeichnisse von anderen Apps abfragen, die als PATH-Einträge hinzugefügt werden sollen.</string>
+    <string name="summary_collect_path_preference">Sollen Verzeichnisse von anderen Apps abgefragt und dem $PATH hinzugefügt werden?</string>
 
     <string name="title_home_path_preference">HOME-Verzeichnis</string>
     <string name="summary_home_path_preference">Den Pfad zu einem beschreibbaren Verzeichnis festlegen, welches als $HOME genutzt werden soll.</string>
