@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,25 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             socket = new UnixSocketServer(socket_prefix + Process.myUid(), this);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void printExternalAliases(ProcessBuilder pb, PrintStream out) {
+        try {
+            java.lang.Process p = pb.start();
+
+            // close process "input stream" to prevent command
+            // to wait for user input.
+            p.getOutputStream().close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while (true) {
+                String line = in.readLine();
+                if (line == null) break;
+                out.println(line);
+            }
+            out.flush();
+        } catch (IOException ignore) {
         }
     }
 
@@ -100,22 +119,7 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
 
             for (File cmd : cmdlist) {
                 ProcessBuilder pb = new ProcessBuilder(cmd.getPath(), "aliases");
-                try {
-                    java.lang.Process p = pb.start();
-
-                    // close process "input stream" to prevent command
-                    // to wait for user input.
-                    p.getOutputStream().close();
-
-                    BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    while (true) {
-                        String line = in.readLine();
-                        if (line == null) break;
-                        out.println(line);
-                    }
-                    out.flush();
-                } catch (IOException ignore) {
-                }
+                printExternalAliases(pb, out);
             }
         }
     }
