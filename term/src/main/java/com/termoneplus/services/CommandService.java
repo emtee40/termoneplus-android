@@ -20,6 +20,7 @@ import android.os.Process;
 import android.text.TextUtils;
 
 import com.termoneplus.BuildConfig;
+import com.termoneplus.compat.PackageManagerCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import jackpal.androidterm.TermService;
@@ -66,6 +68,35 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             out.flush();
         } catch (IOException ignore) {
         }
+    }
+
+    private boolean printExternalAliases2(File cmd, PrintStream out) {
+        ArrayList<String> name = new ArrayList<>();
+        try {
+            ProcessBuilder pb = new ProcessBuilder(cmd.getPath(), "package");
+            java.lang.Process p = pb.start();
+
+            // close process "input stream" to prevent command
+            // to wait for user input.
+            p.getOutputStream().close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while (true) {
+                String line = in.readLine();
+                if (line == null) break;
+                name.add(line);
+            }
+        } catch (IOException ignore) {
+            return false;
+        }
+        if (name.size() != 1) return false;
+
+        int uid = PackageManagerCompat.getApplicationUID(service.getPackageManager(), name.get(0));
+        if (uid < 0) return false;
+
+        ProcessBuilder pb = new ProcessBuilder(cmd.getPath(), "v2", String.valueOf(uid), "aliases");
+        printExternalAliases(pb, out);
+        return true;
     }
 
     public void start() {
@@ -118,6 +149,8 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             if (cmdlist == null) continue;
 
             for (File cmd : cmdlist) {
+                if (printExternalAliases2(cmd, out))
+                    continue;
                 ProcessBuilder pb = new ProcessBuilder(cmd.getPath(), "aliases");
                 printExternalAliases(pb, out);
             }
