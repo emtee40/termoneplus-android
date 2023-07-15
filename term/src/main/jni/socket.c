@@ -25,10 +25,18 @@
 
 #include "appinfo.h"
 
+char *uid = NULL;
+
 
 int/*bool*/
 get_socketname(char *buf, size_t len) {
-    int ret = snprintf(buf, len, "%s-app_info-%ld", PACKAGE_NAME, (long) getuid());
+    int ret;
+
+    if (uid != NULL)
+        ret = snprintf(buf, len, "%s-app_info-%s", PACKAGE_NAME, uid);
+    else
+        ret = snprintf(buf, len, "%s-app_info-%ld", PACKAGE_NAME, (long) getuid());
+
     return 0 < ret && ret < len;
 }
 

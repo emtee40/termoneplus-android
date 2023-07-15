@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 #include <errno.h>
 
 #include "appinfo.h"
+
+extern char *uid;
 
 
 static int/*bool*/
@@ -85,9 +87,11 @@ int
 main(int argc, char *argv[]) {
     int ret;
 
-    if (argc < 2) exit(EX_USAGE);
+    if (argc < 3) exit(EX_USAGE);
 
-    ret = get_info(argc - 1, argv + 1);
+    uid = argv[1];
 
-    return ret ? 0 : EX_SOFTWARE;
+    ret = get_info(argc - 2, argv + 2);
+
+    return ret ? EX_OK : EX_SOFTWARE;
 }

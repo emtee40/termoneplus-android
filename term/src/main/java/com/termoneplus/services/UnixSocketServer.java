@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,8 +88,9 @@ public class UnixSocketServer {
 
                     Credentials credentials = connection.getPeerCredentials();
                     int uid = credentials.getUid();
-                    // accept requests only from same user id
-                    if (uid != android.os.Process.myUid())
+                    // accept requests only from same user id or root
+                    if (uid != android.os.Process.myUid() &&
+                            uid != 0)
                         return;
 
                     Random random = new Random();

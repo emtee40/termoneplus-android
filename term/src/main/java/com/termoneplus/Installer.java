@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class Installer {
         //Next work fine with mksh but fail with ash.
         //shell_script.add(". /proc/self/fd/0 <<< \"$(libexec-t1plus.so aliases)\"");
         shell_script.add(". /proc/self/fd/0 <<EOF");
-        shell_script.add("$(" + APPINFO_COMMAND + " aliases)");
+        shell_script.add("$(" + APPINFO_COMMAND + " " + android.os.Process.myUid() + " aliases)");
         shell_script.add("EOF");
 
         return install_text_file(shell_script.toArray(new String[0]), Application.getScriptFile());
