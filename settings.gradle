@@ -18,7 +18,9 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    //TODO Gradle 8.3 :
+    // "Build was configured to prefer settings repositories over project repositories but repository ... was added by initialization script '.../init.gradle'"
+    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenCentral()
         google()
