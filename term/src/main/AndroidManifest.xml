@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
 
     <!-- development/system permissions, sample:
     $ adb shell pm grant com.termoneplus android.permission.DUMP
@@ -134,6 +135,7 @@
 
         <service
             android:name="jackpal.androidterm.TermService"
+            android:foregroundServiceType="dataSync"
             android:exported="true">
             <intent-filter>
                 <action android:name="jackpal.androidterm.action.START_TERM.v1"/>
