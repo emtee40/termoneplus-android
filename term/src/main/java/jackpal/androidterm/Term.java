@@ -28,7 +28,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,6 +62,7 @@ import com.termoneplus.compat.SoftInputCompat;
 import com.termoneplus.utils.ConsoleStartupScript;
 import com.termoneplus.utils.SimpleClipboardManager;
 import com.termoneplus.utils.WakeLock;
+import com.termoneplus.utils.WifiLock;
 import com.termoneplus.utils.WrapOpenURL;
 import com.termoneplus.widget.ScreenMessage;
 
@@ -108,7 +108,6 @@ public class Term extends AppCompatActivity
     private boolean mStopServiceOnFinish = false;
     private Intent TSIntent;
     private int onResumeSelectWindow = -1;
-    private WifiManager.WifiLock mWifiLock;
     private boolean path_collected;
     private TermService mTermService;
     private TermActionBar mActionBar;
@@ -273,9 +272,7 @@ public class Term extends AppCompatActivity
         Context app = getApplicationContext();
 
         WakeLock.create(this);
-
-        WifiManager wm = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
-        mWifiLock = wm.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, Application.APP_TAG);
+        WifiLock.create(this);
 
         mHaveFullHwKeyboard = checkHaveFullHwKeyboard(getResources().getConfiguration());
 
@@ -356,10 +353,8 @@ public class Term extends AppCompatActivity
         }
         mTermService = null;
         mTSConnection = null;
+        WifiLock.release();
         WakeLock.release();
-        if (mWifiLock.isHeld()) {
-            mWifiLock.release();
-        }
     }
 
     private TermSession createTermSession() throws IOException {
@@ -690,7 +685,7 @@ public class Term extends AppCompatActivity
         } else {
             wakeLockItem.setTitle(R.string.enable_wakelock);
         }
-        if (mWifiLock.isHeld()) {
+        if (WifiLock.isHeld()) {
             wifiLockItem.setTitle(R.string.disable_wifilock);
         } else {
             wifiLockItem.setTitle(R.string.enable_wifilock);
@@ -903,11 +898,7 @@ public class Term extends AppCompatActivity
     }
 
     private void doToggleWifiLock() {
-        if (mWifiLock.isHeld()) {
-            mWifiLock.release();
-        } else {
-            mWifiLock.acquire();
-        }
+        WifiLock.toggle(this);
         invalidateOptionsMenu();
     }
 
