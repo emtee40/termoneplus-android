@@ -33,7 +33,14 @@ EOF
 }
 
 
-XCFFILE=../docs/termoneplus-launcher-icon.xcf
+for T in f m ; do
+
+case $T in
+f) XCFFILE=../docs/termoneplus-launcher-icon.xcf;;
+m) XCFFILE=../docs/termoneplus-launcher-bw_icon.xcf;;
+*) exit 99;;
+esac
+echo "source image date : $FAKETIME" >&2
 
 for MODE in l m h xh xxh xxxh ; do
   case "$MODE" in
@@ -49,8 +56,13 @@ for MODE in l m h xh xxh xxxh ; do
   qualifier=
   test -z "$MODE" || qualifier=-"$MODE"dpi
 
-  PNGFILE=mipmap"$qualifier"/ic_launcher_foreground.png
+  case $T in
+  f) PNGFILE=mipmap"$qualifier"/ic_launcher_foreground.png;;
+  m) PNGFILE=mipmap"$qualifier"/ic_launcher_monochrome.png;;
+  esac
+  mkdir -p ../term/src/main/res/mipmap"$qualifier" || :
   echo creating .../$PNGFILE ... >&2
 
   gimp_convert
+done
 done
