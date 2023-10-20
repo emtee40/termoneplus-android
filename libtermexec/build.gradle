@@ -33,23 +33,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-// by default recent plugin version does not copy any AIDL files "to avoid publishing too much"
-android.libraryVariants.all { variant ->
-    Sync packageAidl = project.tasks.create("addPublic${variant.name.capitalize()}Aidl", Sync) { sync ->
-        from "$project.projectDir/src/main/aidl/"
-        into "$buildDir/intermediates/bundles/${variant.dirName}/aidl/"
+    buildFeatures {
+        aidl true
     }
-
-    Task javaCompileTask
-    if (variant.hasProperty('javaCompileProvider')) {
-        // gradle plugin 3.3.+
-        javaCompileTask = variant.javaCompileProvider.get()
-    } else {
-        javaCompileTask = variant.javaCompile
-    }
-    javaCompileTask.dependsOn packageAidl
 }
 
 dependencies {
