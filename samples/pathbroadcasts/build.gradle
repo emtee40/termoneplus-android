@@ -9,7 +9,7 @@ android {
     namespace "jackpal.androidterm.sample.pathbroadcasts"
 
     compileSdk project.ext.compileSdk
-    buildToolsVersion project.ext.buildToolsVersion
+    buildToolsVersion = project.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.pathbroadcasts"
         minSdkVersion project.ext.minSdkVersion

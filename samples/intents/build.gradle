@@ -9,7 +9,7 @@ android {
     namespace "com.termoneplus.sample.intents"
 
     compileSdk project.ext.compileSdk
-    buildToolsVersion project.ext.buildToolsVersion
+    buildToolsVersion = project.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.intents"
         minSdkVersion project.ext.minSdkVersion

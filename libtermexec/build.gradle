@@ -6,7 +6,7 @@ android {
     namespace "jackpal.androidterm.libtermexec"
 
     compileSdk project.ext.compileSdk
-    buildToolsVersion project.ext.buildToolsVersion
+    buildToolsVersion = project.ext.buildToolsVersion
     ndkVersion project.ext.ndkVersion
     defaultConfig {
         minSdkVersion project.ext.minSdkVersion

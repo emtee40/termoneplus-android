@@ -6,7 +6,7 @@ android {
     namespace "jackpal.androidterm.sample.telnet"
 
     compileSdk project.ext.compileSdk
-    buildToolsVersion project.ext.buildToolsVersion
+    buildToolsVersion = project.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.telnet"
         minSdkVersion project.ext.minSdkVersion

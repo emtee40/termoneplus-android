@@ -6,7 +6,7 @@ android {
     namespace "jackpal.androidterm.emulatorview"
 
     compileSdk project.ext.compileSdk
-    buildToolsVersion project.ext.buildToolsVersion
+    buildToolsVersion = project.ext.buildToolsVersion
     defaultConfig {
         minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
