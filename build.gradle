@@ -7,11 +7,9 @@ plugins {
 }
 
 apply from: 'buildTools.gradle'
+apply from: 'sdkVersion.gradle'
 allprojects {
     project.ext {
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        minSdkVersion = 14
         ndkVersion = '23.2.8568313'
     }
 }

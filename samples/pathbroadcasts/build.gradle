@@ -8,7 +8,7 @@ def termApplicationId = "com.termoneplus"
 android {
     namespace "jackpal.androidterm.sample.pathbroadcasts"
 
-    compileSdkVersion project.ext.compileSdkVersion
+    compileSdk project.ext.compileSdk
     buildToolsVersion project.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.pathbroadcasts"

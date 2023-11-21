@@ -5,7 +5,7 @@ plugins {
 android {
     namespace "jackpal.androidterm.emulatorview"
 
-    compileSdkVersion project.ext.compileSdkVersion
+    compileSdk project.ext.compileSdk
     buildToolsVersion project.ext.buildToolsVersion
     defaultConfig {
         minSdkVersion project.ext.minSdkVersion
