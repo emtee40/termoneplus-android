@@ -8,11 +8,7 @@ plugins {
 
 apply from: 'buildTools.gradle'
 apply from: 'sdkVersion.gradle'
-allprojects {
-    project.ext {
-        ndkVersion = '23.2.8568313'
-    }
-}
+apply from: 'ndkVersion.gradle'
 
 tasks.register('clean', Delete) {
     delete rootProject.layout.buildDirectory
