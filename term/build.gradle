@@ -67,8 +67,8 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        variant.resValue  "string", "application_version", variant.versionName
+    applicationVariants.configureEach { variant ->
+        variant.resValue "string", "application_version", variant.versionName
     }
 }
 
@@ -87,7 +87,7 @@ tasks.register('elfcleaner', Exec) {
     commandLine 'sh', '-c', 'find build/*/stripped* -name lib*.so -print0 | xargs -0 -P 0 elf-cleaner'
 }
 
-tasks.whenTaskAdded { task ->
+tasks.configureEach { task ->
     if (task.name.matches('strip.*DebugSymbols')) {
         task.finalizedBy elfcleaner
     }
