@@ -19,7 +19,7 @@ android {
         versionName '2.1.0'
 
         // TermOnePlus applicationId
-        manifestPlaceholders = [termApplicationId:"${termApplicationId}"]
+        manifestPlaceholders.termApplicationId = "${termApplicationId}"
         buildConfigField("String", "TERM_APPLICATION_ID", "\"${termApplicationId}\"")
     }
     compileOptions {

@@ -18,7 +18,7 @@ android {
         versionCode 210
         versionName '2.1.0'
 
-        manifestPlaceholders = [termApplicationId:"${termApplicationId}"]
+        manifestPlaceholders.termApplicationId = "${termApplicationId}"
         buildConfigField("String", "TERM_APPLICATION_ID", "\"${termApplicationId}\"")
     }
     compileOptions {
