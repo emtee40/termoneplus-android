@@ -1,7 +1,3 @@
-allprojects {
-    project.ext {
-        compileSdk = 34
-        targetSdkVersion = 34
-        minSdkVersion = 14
-    }
-}
+ext.compileSdk = 34
+ext.targetSdkVersion = 34
+ext.minSdkVersion = 14

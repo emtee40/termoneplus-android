@@ -1,5 +1,1 @@
-allprojects {
-    project.ext {
-        buildToolsVersion = '34.0.0'
-    }
-}
+ext.buildToolsVersion = '34.0.0'

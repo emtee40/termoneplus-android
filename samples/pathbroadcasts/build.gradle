@@ -8,12 +8,12 @@ def termApplicationId = "com.termoneplus"
 android {
     namespace "jackpal.androidterm.sample.pathbroadcasts"
 
-    compileSdk project.ext.compileSdk
-    buildToolsVersion = project.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdk
+    buildToolsVersion = rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.pathbroadcasts"
-        minSdkVersion project.ext.minSdkVersion
-        targetSdkVersion project.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         versionCode 210
         versionName '2.1.0'

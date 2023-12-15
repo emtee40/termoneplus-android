@@ -5,12 +5,12 @@ plugins {
 android {
     namespace "jackpal.androidterm.sample.telnet"
 
-    compileSdk project.ext.compileSdk
-    buildToolsVersion = project.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdk
+    buildToolsVersion = rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.telnet"
-        minSdkVersion project.ext.minSdkVersion
-        targetSdkVersion project.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         versionCode 210
         versionName '2.1.0'

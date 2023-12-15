@@ -5,13 +5,13 @@ plugins {
 android {
     namespace "com.termoneplus"
 
-    compileSdk project.ext.compileSdk
-    buildToolsVersion = project.ext.buildToolsVersion
-    ndkVersion project.ext.ndkVersion
+    compileSdk rootProject.ext.compileSdk
+    buildToolsVersion = rootProject.ext.buildToolsVersion
+    ndkVersion rootProject.ext.ndkVersion
     defaultConfig {
         applicationId "com.termoneplus"
-        minSdkVersion project.ext.minSdkVersion
-        targetSdkVersion project.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         vectorDrawables.useSupportLibrary = true
 

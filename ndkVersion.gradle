@@ -1,5 +1,1 @@
-allprojects {
-    project.ext {
-        ndkVersion = '23.2.8568313'
-    }
-}
+ext.ndkVersion = '23.2.8568313'
