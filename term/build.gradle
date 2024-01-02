@@ -66,14 +66,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-
-    applicationVariants.configureEach { variant ->
-        variant.resValue "string", "application_version", variant.versionName
+    buildFeatures {
+        buildConfig true
     }
     packagingOptions {
         jniLibs {
             useLegacyPackaging true
         }
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.resValue "string", "application_version", variant.versionName
     }
 }
 
