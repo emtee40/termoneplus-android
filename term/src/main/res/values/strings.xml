@@ -114,6 +114,11 @@
     <string name="summary_color_preference">Choose text color.</string>
     <string name="dialog_title_color_preference">Text color</string>
 
+    <string name="key_fontsource_preference" translatable="false">fontsource</string>
+    <string name="dialog_title_fontsource_preference">Font</string>
+    <string name="fontsource_system_label">System</string>
+    <string name="fontsource_buildin_label">Build-In</string>
+
     <string name="keyboard_preferences">Keyboard</string>
 
     <string name="title_backaction_preference">Back button behavior</string>

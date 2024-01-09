@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import jackpal.androidterm.emulatorview.ColorScheme;
@@ -116,5 +120,15 @@ public class Settings {
             source_sys_shrc = value;
             Installer.installAppScriptFile();
         }
+    }
+
+    @IntDef({
+            FontSource.SYSTEM,
+            FontSource.EMBED
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface FontSource {
+        int SYSTEM = 1; // default
+        int EMBED = 2;
     }
 }
