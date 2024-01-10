@@ -48,6 +48,8 @@ public class Settings {
             new ColorScheme(0xFFDCDCCC, 0xFF2C2C2C) /*dark pastels*/
     };
 
+    @FontSource
+    private int font_source;
     private String initial_command;
     private boolean source_sys_shrc;
 
@@ -58,6 +60,9 @@ public class Settings {
 
     public Settings(Context context, SharedPreferences preferences) {
         Resources r = context.getResources();
+        font_source = parseInteger(preferences,
+                context.getString(R.string.key_fontsource_preference),
+                FontSource.SYSTEM);
         initial_command = parseString(preferences,
                 context.getString(R.string.key_initialcommand_preference),
                 r.getString(R.string.pref_initialcommand_default));
@@ -79,8 +84,14 @@ public class Settings {
     public void parsePreference(Context context, SharedPreferences preferences, String key) {
         if (TextUtils.isEmpty(key)) return;
 
+        if (parseFontSource(context, preferences, key)) return;
         if (parseInitialCommand(context, preferences, key)) return;
         parseSourceSysRC(context, preferences, key);
+    }
+
+    @FontSource
+    public int getFontSource() {
+        return font_source;
     }
 
     public boolean sourceSystemShellStartupFile() {
@@ -95,12 +106,33 @@ public class Settings {
         return def;
     }
 
+    private int parseInteger(SharedPreferences preferences, String key, int def) {
+        try {
+            String value = preferences.getString(key, null);
+            if (value == null) return def;
+            return Integer.decode(value);
+        } catch (Exception ignored) {
+        }
+        return def;
+    }
+
     private String parseString(SharedPreferences preferences, String key, String def) {
         try {
             return preferences.getString(key, def);
         } catch (Exception ignored) {
         }
         return def;
+    }
+
+    private boolean parseFontSource(Context context, SharedPreferences preferences, String key) {
+        String pref = context.getString(R.string.key_fontsource_preference);
+        if (!key.equals(pref)) return false;
+
+        int value = parseInteger(preferences, key, font_source);
+        font_source = (value == FontSource.EMBED)
+                ? FontSource.EMBED
+                : FontSource.SYSTEM;
+        return true;
     }
 
     private boolean parseInitialCommand(Context context, SharedPreferences preferences, String key) {

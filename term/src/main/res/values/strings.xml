@@ -115,6 +115,8 @@
     <string name="dialog_title_color_preference">Text color</string>
 
     <string name="key_fontsource_preference" translatable="false">fontsource</string>
+    <string name="title_fontsource_preference">Font source</string>
+    <string name="summary_fontsource_preference">Choose font source.</string>
     <string name="dialog_title_fontsource_preference">Font</string>
     <string name="fontsource_system_label">System</string>
     <string name="fontsource_buildin_label">Build-In</string>

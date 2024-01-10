@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2008 The Android Open Source Project
-     Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
+     Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -38,6 +38,12 @@
             android:key="color"
             android:summary="@string/summary_color_preference"
             android:title="@string/title_color_preference"/>
+
+        <Preference
+            android:key="@string/key_fontsource_preference"
+            android:persistent="false"
+            android:summary="@string/summary_fontsource_preference"
+            android:title="@string/title_fontsource_preference"/>
 
         <CheckBoxPreference
             android:defaultValue="@bool/pref_utf8_by_default_default"

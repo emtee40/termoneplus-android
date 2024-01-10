@@ -39,9 +39,11 @@ public class TypefaceSetting {
 
     private final TextView license;
     @Settings.FontSource
-    private int source = Settings.FontSource.SYSTEM;
+    private int source;
 
     private TypefaceSetting(Activity activity) {
+        source = Application.settings.getFontSource();
+
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_font_source, null);
 
@@ -86,6 +88,21 @@ public class TypefaceSetting {
 
     public static void create(AssetManager am) {
         typeface = Typeface.createFromAsset(am, "font/DejaVuSansMono.ttf");
+    }
+
+    public static boolean chose(Activity activity) {
+        if (activity == null) return false;
+
+        new TypefaceSetting(activity);
+        return true;
+    }
+
+    public static Typeface getTypeface() {
+        Settings settings = Application.settings;
+        if (settings == null) return Typeface.MONOSPACE;
+        if (settings.getFontSource() == Settings.FontSource.EMBED)
+            return typeface;
+        return Typeface.MONOSPACE;
     }
 
     private void onFontSourceButtonClicked(View view) {

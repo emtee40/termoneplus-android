@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,6 +91,8 @@ public class Application extends android.app.Application {
 
         setupPreferences();
         ThemeManager.migrateFileSelectionThemeMode(this);
+
+        TypefaceSetting.create(getAssets());
 
         Installer.install_directory(etcdir, false);
         install_skeleton();

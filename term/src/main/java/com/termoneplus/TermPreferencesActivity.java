@@ -91,6 +91,10 @@ public class TermPreferencesActivity extends AppCompatActivity
             // Load the preferences from an XML resource
             setPreferencesFromResource(R.xml.preferences, rootKey);
 
+            findPreference(getString(R.string.key_fontsource_preference))
+                    .setOnPreferenceClickListener(
+                            preference -> TypefaceSetting.chose(getActivity()));
+
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
             String pref_home_path = getString(R.string.key_home_path_preference);
             String homedir = prefs.getString(pref_home_path, "");

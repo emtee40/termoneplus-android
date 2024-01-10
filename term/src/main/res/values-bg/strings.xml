@@ -125,6 +125,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="summary_color_preference">Избор на цвят на текста</string>
     <string name="dialog_title_color_preference">Цвят на текст</string>
 
+    <string name="title_fontsource_preference">Източник за шрифт</string>
+    <string name="summary_fontsource_preference">Изберане на източник за шрифт.</string>
     <string name="dialog_title_fontsource_preference">Шрифт</string>
     <string name="fontsource_system_label">Системен</string>
     <string name="fontsource_buildin_label">Вграден</string>

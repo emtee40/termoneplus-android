@@ -21,6 +21,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 
+import com.termoneplus.TypefaceSetting;
+
 import jackpal.androidterm.emulatorview.EmulatorView;
 import jackpal.androidterm.emulatorview.TermSession;
 import jackpal.androidterm.util.TermSettings;
@@ -40,7 +42,7 @@ public class TermView extends EmulatorView {
         setTermType(settings.getTermType());
         setMouseTracking(settings.getMouseTrackingFlag());
         // call last as method invalidates terminal
-        setPaintAttributes(Typeface.MONOSPACE,
+        setPaintAttributes(TypefaceSetting.getTypeface(),
                 settings.getFontSize(), settings.getColorScheme());
     }
 
