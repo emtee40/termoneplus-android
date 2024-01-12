@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (C) 2021 Michal L
+ * Copyright (C) 2020-2023 Michal L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,12 @@
     <string name="enable_wifilock">Weź WifiLock</string>
     <string name="disable_wifilock">Zwolnij WifiLock</string>
 
+    <string name="path_collection_progress">collecting paths from other applications …</string>
+
     <!-- Navigation drawer -->
+    <string name="navigation_drawer_open">Otwórz panel nawigacji</string>
+    <string name="navigation_drawer_close">Zamknij panel nawigacji</string>
+
     <string name="message_external_storage_rationale">Dostęp do \"pamięci zewnętrznej\" jest wymagany do zarządzania plikami</string>
     <string name="message_external_storage_granted">Dostęp przyznany do \"pamięci zewnętrznej\"</string>
     <string name="message_external_storage_not_granted">Odmowa dostępu do \"pamięci zewnętrznej\"</string>
@@ -129,6 +134,12 @@
     <string name="summary_shell_preference">Określ wiersz poleceń powłoki.</string>
     <string name="dialog_title_shell_preference">Powłoka</string>
 
+    <string name="title_source_sys_shrc_preference">Źródłowy plik systemowy mkshrc</string>
+    <string name="summary_source_sys_shrc_preference">
+      W specyficznych dla aplikacji komendach źródłowych skryptu startowego powłoki z pliku startowego powłoki systemowej (/system/etc/mkshrc).
+      Zależy od wiersza poleceń powłoki.
+    </string>
+
     <string name="title_initialcommand_preference">Komenda początkowa</string>
     <string name="summary_initialcommand_preference">Wysyłana do powłoki podczas startu.</string>
     <string name="dialog_title_initialcommand_preference">Komenda początkowa</string>
@@ -148,6 +159,9 @@
     <string name="title_verify_path_preference">Weryfikuj ścieżki PATH</string>
     <string name="summary_verify_path_preference">Określa, czy niedostępne katalogi powinny być usunięte ze zmiennej PATH.</string>
 
+    <string name="title_collect_path_preference">Zbierz wpisy PATH</string>
+    <string name="summary_collect_path_preference">Zbierz katalogi z innych aplikacji, aby dodać je jako wpisy PATH.</string>
+
     <string name="title_home_path_preference">Folder domowy (HOME)</string>
     <string name="summary_home_path_preference">Ścieżka do folderu z możliwością zapisu, który będzie używany jako folder domowy (HOME)</string>
 
@@ -164,6 +178,7 @@
     <string name="confirm_window_close_message">Zamknąć to okno?</string>
 
     <string name="perm_grp_term">Uprawnienia programu Terminal Emulator</string>
+    <string name="permdesc_grp_term">Służy do uzyskiwania dostępu do funkcji emulatora terminala.</string>
     <string name="perm_run_script">Uruchamiaj komendy w Terminal Emulator</string>
     <string name="permdesc_run_script">Pozwala na otwieranie nowych okien w aplikacji Terminal Emulator dla systemu Android i wykonywanie poleceń w tych oknach ze wszystkimi uprawnieniami, w tym dostępem do Internetu i karty SD.</string>
     <string name="perm_append_to_path">Dodawanie komend w Terminal Emulator</string>
@@ -186,7 +201,10 @@
     <string name="use_keyboard_shortcuts_summary_on">Ctrl-Tab: przełącz okno, Ctrl-Shift-N: nowe okno, Ctrl-Shift-V: wklej.</string>
     <string name="use_keyboard_shortcuts_summary_off">Skróty klawiaturowe wyłączone.</string>
 
+    <string name="script_intent_title">Wybierz skrypt</string>
     <string name="script_import_error">Nie można odczytać wybranego skryptu</string>
+    <string name="script_access_error">Nie można uzyskać dostępu do wybranego skryptu</string>
+    <string name="script_source_content_error">Nie znaleziono działania do obsługi akcji „Pobierz zawartość”</string>
 
     <string name="help">Pomoc</string>
     <string name="activity_term_here_title">Terminal tutaj</string>
