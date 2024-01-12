@@ -16,7 +16,7 @@
 -->
 <!--
 Copyright (c) 2017, Tobias Bannert <tobannert@gmail.com>
-Copyright (c) 2022-2023, Ingo Brückl <ib@wupperonline.de>
+Copyright (c) 2022-2024, Ingo Brückl <ib@wupperonline.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -142,6 +142,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="title_color_preference">Farben</string>
     <string name="summary_color_preference">Die Text- und Hintergrundfarbe festlegen.</string>
     <string name="dialog_title_color_preference">Text- und Hintergrundfarbe</string>
+
+    <string name="title_fontsource_preference">Schriftart</string>
+    <string name="summary_fontsource_preference">Die Art der Schrift wählen.</string>
+    <string name="dialog_title_fontsource_preference">Schriftart</string>
+    <string name="fontsource_system_label">Systemschrift</string>
+    <string name="fontsource_buildin_label">Alternative Schrift</string>
 
     <string name="keyboard_preferences">Tastatur</string>
 
