@@ -59,6 +59,7 @@ import com.termoneplus.TermPreferencesActivity;
 import com.termoneplus.WindowListActivity;
 import com.termoneplus.WindowListAdapter;
 import com.termoneplus.compat.SoftInputCompat;
+import com.termoneplus.services.SessionsService;
 import com.termoneplus.utils.ConsoleStartupScript;
 import com.termoneplus.utils.SimpleClipboardManager;
 import com.termoneplus.utils.WakeLock;
@@ -109,7 +110,6 @@ public class Term extends AppCompatActivity
     private Intent TSIntent;
     private int onResumeSelectWindow = -1;
     private boolean path_collected;
-    private TermService mTermService;
     private TermActionBar mActionBar;
     private int mActionBarMode;
     private WindowListAdapter mWinListAdapter;
@@ -178,12 +178,12 @@ public class Term extends AppCompatActivity
         public void onServiceConnected(ComponentName className, IBinder service) {
             Log.i(Application.APP_TAG, "Bound to TermService");
             TermService.TSBinder binder = (TermService.TSBinder) service;
-            mTermService = binder.getService();
+            SessionsService.service = binder.getService();
             populateSessions();
         }
 
         public void onServiceDisconnected(ComponentName arg0) {
-            mTermService = null;
+            SessionsService.service = null;
         }
     };
     private Handler mHandler;
@@ -246,8 +246,9 @@ public class Term extends AppCompatActivity
             int oldPosition = mViewFlipper.getDisplayedChild();
             if (position == oldPosition) return;
 
+            if (SessionsService.service == null) return;
             if (position >= mViewFlipper.getChildCount()) {
-                TermSession session = mTermService.getSession(position);
+                TermSession session = SessionsService.service.getSession(position);
                 mViewFlipper.addView(createEmulatorView(session));
             }
             mViewFlipper.setDisplayedChild(position);
@@ -291,12 +292,12 @@ public class Term extends AppCompatActivity
     }
 
     private synchronized void populateSessions() {
-        if (mTermService == null) return;
+        if (SessionsService.service == null) return;
         if (!path_collected) return;
 
-        if (mTermService.getSessionCount() == 0) {
+        if (SessionsService.service.getSessionCount() == 0) {
             try {
-                mTermService.addSession(createTermSession());
+                SessionsService.service.addSession(createTermSession());
             } catch (IOException e) {
                 ScreenMessage.show(getApplicationContext(),
                         "Failed to start terminal session");
@@ -305,7 +306,7 @@ public class Term extends AppCompatActivity
             }
         }
 
-        mTermSessions = mTermService.getSessions();
+        mTermSessions = SessionsService.service.getSessions();
         mTermSessions.addCallback(this);
 
         populateViewFlipper();
@@ -351,7 +352,7 @@ public class Term extends AppCompatActivity
         if (mStopServiceOnFinish) {
             stopService(TSIntent);
         }
-        mTermService = null;
+        SessionsService.service = null;
         mTSConnection = null;
         WifiLock.release();
         WakeLock.release();
@@ -375,9 +376,9 @@ public class Term extends AppCompatActivity
     }
 
     protected TermSession getCurrentTermSession() {
-        if (mTermService == null) return null;
+        if (SessionsService.service == null) return null;
 
-        return mTermService.getSession(mViewFlipper.getDisplayedChild());
+        return SessionsService.service.getSession(mViewFlipper.getDisplayedChild());
     }
 
     protected EmulatorView getCurrentEmulatorView() {
@@ -549,15 +550,15 @@ public class Term extends AppCompatActivity
     }
 
     private void doCreateNewWindow() {
-        if (mTermService == null) {
-            Log.w(Application.APP_TAG, "Couldn't create new window because mTermService == null");
+        if (SessionsService.service == null) {
+            Log.w(Application.APP_TAG, "Couldn't create new window because SessionsService is not set");
             return;
         }
 
         try {
             TermSession session = createTermSession();
 
-            mTermService.addSession(session);
+            SessionsService.service.addSession(session);
 
             TermView view = createEmulatorView(session);
             view.updatePrefs(mSettings);
@@ -583,7 +584,7 @@ public class Term extends AppCompatActivity
     }
 
     private void doCloseWindow() {
-        if (mTermService == null) return;
+        if (SessionsService.service == null) return;
 
         EmulatorView view = getCurrentEmulatorView();
         if (view == null) return;
@@ -593,7 +594,7 @@ public class Term extends AppCompatActivity
         TermSession session = view.getTermSession();
         if (session != null) session.finish();
 
-        if (mTermService.getSessionCount() > 0)
+        if (SessionsService.service.getSessionCount() > 0)
             mViewFlipper.showNext();
     }
 
@@ -609,11 +610,11 @@ public class Term extends AppCompatActivity
                 // Create only new session and then on service connection view
                 // flipper and etc. will be updated...
                 //doCreateNewWindow();
-                if (mTermService != null) {
+                if (SessionsService.service != null) {
                     try {
                         TermSession session = createTermSession();
-                        mTermService.addSession(session);
-                        onResumeSelectWindow = mTermService.getSessionCount() - 1;
+                        SessionsService.service.addSession(session);
+                        onResumeSelectWindow = SessionsService.service.getSessionCount() - 1;
                     } catch (IOException e) {
                         ScreenMessage.show(this.getApplicationContext(),
                                 "Failed to create a session");
@@ -625,7 +626,7 @@ public class Term extends AppCompatActivity
         } else {
             // Close the activity if user closed all sessions
             // TODO the left path will be invoked when nothing happened, but this Activity was destroyed!
-            if (mTermService == null || mTermService.getSessionCount() == 0) {
+            if (SessionsService.service == null || SessionsService.service.getSessionCount() == 0) {
                 mStopServiceOnFinish = true;
                 finish();
             }
@@ -727,15 +728,15 @@ public class Term extends AppCompatActivity
 
     // Called when the list of sessions changes
     public void onUpdate() {
-        if (mTermService == null) return;
+        if (SessionsService.service == null) return;
 
-        if (mTermService.getSessionCount() == 0) {
+        if (SessionsService.service.getSessionCount() == 0) {
             mStopServiceOnFinish = true;
             finish();
             return;
         }
 
-        SessionList sessions = mTermService.getSessions();
+        SessionList sessions = SessionsService.service.getSessions();
         if (sessions.size() < mViewFlipper.getChildCount()) {
             for (int i = 0; i < mViewFlipper.getChildCount(); ++i) {
                 EmulatorView v = (EmulatorView) mViewFlipper.getChildAt(i);
