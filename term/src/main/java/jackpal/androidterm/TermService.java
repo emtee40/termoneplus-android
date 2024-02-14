@@ -67,6 +67,27 @@ public class TermService extends Service {
         return StartServiceCompat.start(context);
     }
 
+    private static Notification buildNotification(Context context) {
+        NotificationChannelCompat.create(context);
+
+        Intent notifyIntent = TermActivity.getNotificationIntent(context);
+        PendingIntent pendingIntent = ActivityPendingIntent.get(context, 0, notifyIntent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                context,
+                Application.NOTIFICATION_CHANNEL_SESSIONS)
+                .setSmallIcon(R.drawable.ic_stat_service_notification_icon)
+                .setContentTitle(context.getText(R.string.application_terminal))
+                .setContentText(context.getText(R.string.service_notify_text))
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setTicker(context.getText(R.string.service_notify_text))
+                .setWhen(System.currentTimeMillis())
+                .setOngoing(true)
+                .setContentIntent(pendingIntent);
+        return builder.build();
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
@@ -142,40 +163,23 @@ public class TermService extends Service {
     }
 
     private Notification buildNotification() {
-        NotificationChannelCompat.create(this);
-
-        Intent notifyIntent = TermActivity.getNotificationIntent(this);
-        PendingIntent pendingIntent = ActivityPendingIntent.get(this, 0, notifyIntent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
-                Application.NOTIFICATION_CHANNEL_SESSIONS)
-                .setSmallIcon(R.drawable.ic_stat_service_notification_icon)
-                .setContentTitle(getText(R.string.application_terminal))
-                .setContentText(getText(R.string.service_notify_text))
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setTicker(getText(R.string.service_notify_text))
-                .setWhen(System.currentTimeMillis())
-                .setOngoing(true)
-                .setContentIntent(pendingIntent);
-        return builder.build();
+        return buildNotification(this.getApplicationContext());
     }
 
-
     private static class NotificationChannelCompat {
-        private static void create(TermService service) {
+        private static void create(Context context) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O /*API Level 26*/) return;
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
-            Compat26.create(service);
+            Compat26.create(context);
         }
 
         @RequiresApi(26)
         private static class Compat26 {
-            private static void create(TermService service) {
+            private static void create(Context context) {
                 // Register the channel with the system ...
                 // Note we can't change the importance or other notification behaviors after this.
-                NotificationManager notificationManager = service.getSystemService(NotificationManager.class);
+                NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
                 if (notificationManager.getNotificationChannel(Application.NOTIFICATION_CHANNEL_SESSIONS) != null)
                     return;
 
