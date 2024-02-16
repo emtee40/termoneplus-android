@@ -126,6 +126,12 @@ public class AddShortcut extends AppCompatActivity {
             }
         });
 
+        final EditText cmd_path = shortcut_view.findViewById(R.id.cmd_path);
+        cmd_path.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) return;
+            path = cmd_path.getText().toString();
+        });
+
         Button btn_cmd_path = shortcut_view.findViewById(R.id.btn_cmd_path);
         btn_cmd_path.setOnClickListener(
                 view -> {
