@@ -301,27 +301,7 @@ public class TermService extends Service {
 
                     if (!TextUtils.isEmpty(label)) {
                         final String niceName = label.toString();
-
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            GenericTermSession session = null;
-                            try {
-                                final TermSettings settings = new TermSettings(getApplicationContext());
-
-                                session = new BoundSession(pseudoTerminalMultiplexerFd, settings, niceName);
-                                session.setHandle(sessionHandle);
-                                session.setTitle("");
-                                session.initializeEmulator(80, 24);
-
-                                addSession(session, new RBinderCleanupCallback(result, callback));
-                            } catch (Exception whatWentWrong) {
-                                Log.e("TermService", "Failed to bootstrap AIDL session: "
-                                        + whatWentWrong.getMessage());
-
-                                if (session != null)
-                                    session.finish();
-                            }
-                        });
-
+                        createBoundSession(pseudoTerminalMultiplexerFd, sessionHandle, niceName, result, callback);
                         return result.getIntentSender();
                     }
                 } catch (PackageManager.NameNotFoundException ignore) {
@@ -329,6 +309,20 @@ public class TermService extends Service {
             }
 
             return null;
+        }
+
+        private void createBoundSession(final ParcelFileDescriptor fd, String handle, String issuerTitle,
+                                        final PendingIntent result, final ResultReceiver callback) {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                final TermSettings settings = new TermSettings(getApplicationContext());
+
+                GenericTermSession session = new BoundSession(fd, settings, issuerTitle);
+                session.setHandle(handle);
+                session.setTitle("");
+                session.initializeEmulator(80, 24);
+
+                addSession(session, new RBinderCleanupCallback(result, callback));
+            });
         }
     }
 
