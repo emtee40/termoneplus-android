@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import com.termoneplus.R;
 import com.termoneplus.TermActivity;
 import com.termoneplus.compat.PackageManagerCompat;
 import com.termoneplus.services.CommandService;
+import com.termoneplus.services.SessionsService;
 
 import java.util.UUID;
 
@@ -52,15 +53,13 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import jackpal.androidterm.emulatorview.TermSession;
 import jackpal.androidterm.libtermexec.v1.ITerminal;
-import jackpal.androidterm.util.SessionList;
 import jackpal.androidterm.util.TermSettings;
 
 
-public class TermService extends Service {
+public class TermService extends SessionsService {
     private static final int RUNNING_NOTIFICATION = 1;
 
     private final IBinder mTSBinder = new TSBinder();
-    private final SessionList mTermSessions = new SessionList();
     private CommandService command_service;
 
     public static Intent start(Context context) {
@@ -121,46 +120,10 @@ public class TermService extends Service {
     @Override
     public void onDestroy() {
         command_service.stop();
-
-        for (TermSession session : mTermSessions) {
-            /* Don't automatically remove from list of sessions -- we clear the
-             * list below anyway and we could trigger
-             * ConcurrentModificationException if we do */
-            session.setFinishCallback(null);
-            session.finish();
-        }
-        mTermSessions.clear();
+        clearSessions();
         StopForeground.stop(this);
     }
 
-    public int getSessionCount() {
-        return mTermSessions.size();
-    }
-
-    public TermSession getSession(int index) {
-        try {
-            return mTermSessions.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-    }
-
-    public SessionList getSessions() {
-        return mTermSessions;
-    }
-
-    public void addSession(TermSession session) {
-        addSession(session, this::onSessionFinish);
-    }
-
-    private void addSession(TermSession session, TermSession.FinishCallback callback) {
-        mTermSessions.add(session);
-        session.setFinishCallback(callback);
-    }
-
-    private void onSessionFinish(TermSession session) {
-        mTermSessions.remove(session);
-    }
 
     private Notification buildNotification() {
         return buildNotification(this.getApplicationContext());
@@ -341,7 +304,7 @@ public class TermService extends Service {
 
             callback.send(0, new Bundle());
 
-            mTermSessions.remove(session);
+            removeSession(session);
         }
     }
 }
