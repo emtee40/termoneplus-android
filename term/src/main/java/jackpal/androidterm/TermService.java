@@ -236,16 +236,7 @@ public class TermService extends SessionsService {
                                          final ResultReceiver callback) {
             final String sessionHandle = UUID.randomUUID().toString();
 
-            // distinct Intent Uri and PendingIntent requestCode must be sufficient to avoid collisions
-            final Intent switchIntent = new Intent()
-                    .setClassName(Application.ID, Term.class.getName())
-                    .setAction(Application.ACTION_OPEN_NEW_WINDOW)
-                    .setData(Uri.parse(sessionHandle))
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .putExtra(Application.ARGUMENT_TARGET_WINDOW, sessionHandle);
-
-            final PendingIntent result = ActivityPendingIntent.get(getApplicationContext(), sessionHandle.hashCode(),
-                    switchIntent, 0);
+            final PendingIntent result = createResultIntent(sessionHandle);
 
             final PackageManager pm = getPackageManager();
             final String[] pkgs = pm.getPackagesForUid(getCallingUid());
@@ -273,6 +264,18 @@ public class TermService extends SessionsService {
             }
 
             return null;
+        }
+
+        private PendingIntent createResultIntent(final String sessionHandle) {
+            // distinct Intent Uri and PendingIntent requestCode must be sufficient to avoid collisions
+            final Intent switchIntent = new Intent(getApplicationContext(), Term.class)
+                    .setAction(Application.ACTION_OPEN_NEW_WINDOW)
+                    .setData(Uri.parse(sessionHandle))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .putExtra(Application.ARGUMENT_TARGET_WINDOW, sessionHandle);
+
+            return ActivityPendingIntent.get(getApplicationContext(),
+                    sessionHandle.hashCode(), switchIntent, 0);
         }
 
         private void createBoundSession(final ParcelFileDescriptor fd, String handle, String issuerTitle,
