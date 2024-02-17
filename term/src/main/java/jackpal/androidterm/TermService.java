@@ -264,7 +264,8 @@ public class TermService extends SessionsService {
 
                     if (!TextUtils.isEmpty(label)) {
                         final String niceName = label.toString();
-                        createBoundSession(pseudoTerminalMultiplexerFd, sessionHandle, niceName, result, callback);
+                        createBoundSession(pseudoTerminalMultiplexerFd, sessionHandle, niceName,
+                                new RBinderCleanupCallback(result, callback));
                         return result.getIntentSender();
                     }
                 } catch (PackageManager.NameNotFoundException ignore) {
@@ -275,7 +276,7 @@ public class TermService extends SessionsService {
         }
 
         private void createBoundSession(final ParcelFileDescriptor fd, String handle, String issuerTitle,
-                                        final PendingIntent result, final ResultReceiver callback) {
+                                        final TermSession.FinishCallback callback) {
             new Handler(Looper.getMainLooper()).post(() -> {
                 final TermSettings settings = new TermSettings(getApplicationContext());
 
@@ -284,7 +285,7 @@ public class TermService extends SessionsService {
                 session.setTitle("");
                 session.initializeEmulator(80, 24);
 
-                addSession(session, new RBinderCleanupCallback(result, callback));
+                addSession(session, callback);
             });
         }
     }
