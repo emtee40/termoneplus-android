@@ -42,6 +42,7 @@ import android.util.Log;
 
 import com.termoneplus.Application;
 import com.termoneplus.R;
+import com.termoneplus.RemoteSession;
 import com.termoneplus.TermActivity;
 import com.termoneplus.compat.PackageManagerCompat;
 import com.termoneplus.services.CommandService;
@@ -268,14 +269,15 @@ public class TermService extends SessionsService {
 
         private PendingIntent createResultIntent(final String sessionHandle) {
             // distinct Intent Uri and PendingIntent requestCode must be sufficient to avoid collisions
-            final Intent switchIntent = new Intent(getApplicationContext(), Term.class)
+            final Intent switchIntent = new Intent(getApplicationContext(), RemoteSession.class)
                     .setAction(Application.ACTION_OPEN_NEW_WINDOW)
                     .setData(Uri.parse(sessionHandle))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     .putExtra(Application.ARGUMENT_TARGET_WINDOW, sessionHandle);
 
+            int flags = PendingIntent.FLAG_ONE_SHOT;
             return ActivityPendingIntent.get(getApplicationContext(),
-                    sessionHandle.hashCode(), switchIntent, 0);
+                    sessionHandle.hashCode(), switchIntent, flags);
         }
 
         private void createBoundSession(final ParcelFileDescriptor fd, String handle, String issuerTitle,
