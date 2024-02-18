@@ -89,6 +89,12 @@ public class RemoteInterface extends RemoteActionActivity {
         openNewWindow(null);
     }
 
+    protected void switchWindowActivity(int index) {
+        Intent intent = TermActivity.getSwitchWindowIntent(this)
+                .putExtra(Application.ARGUMENT_TARGET_WINDOW, index);
+        startActivity(intent);
+    }
+
     protected String openNewWindow(String iInitialCommand) {
         TermService service = getTermService();
 
@@ -134,9 +140,7 @@ public class RemoteInterface extends RemoteActionActivity {
             target.write('\r');
         }
 
-        Intent intent = TermActivity.getSwitchWindowIntent(this)
-                .putExtra(Application.ARGUMENT_TARGET_WINDOW, index);
-        startActivity(intent);
+        switchWindowActivity(index);
 
         return handle;
     }
