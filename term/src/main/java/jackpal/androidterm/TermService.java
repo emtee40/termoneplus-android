@@ -17,6 +17,7 @@
 
 package jackpal.androidterm;
 
+import android.app.ActivityOptions;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -169,7 +170,33 @@ public class TermService extends SessionsService {
             */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M /*API level 23*/)
                 flags |= PendingIntent.FLAG_IMMUTABLE;
-            return PendingIntent.getActivity(context, requestCode, intent, flags);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN /*API level 16*/)
+                return Compat16.get(context, requestCode, intent, flags);
+            return Compat.get(context, requestCode, intent, flags);
+        }
+
+        @RequiresApi(16)
+        private static class Compat16 {
+            private static PendingIntent get(Context context, int requestCode, Intent intent, int flags) {
+                Bundle bundle = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE /*API level 34*/) {
+                    ActivityOptions options = ActivityOptions.makeBasic();
+                    options.setPendingIntentBackgroundActivityStartMode(ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED);
+                    bundle = options.toBundle();
+                // Note not required on Android 13.
+                //} else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU /*API level 33*/) {
+                //    ActivityOptions options = ActivityOptions.makeBasic();
+                //    options.setPendingIntentBackgroundActivityLaunchAllowed(true);
+                //    bundle = options.toBundle();
+                }
+                return PendingIntent.getActivity(context, requestCode, intent, flags, bundle);
+            }
+        }
+
+        private static class Compat {
+            private static PendingIntent get(Context context, int requestCode, Intent intent, int flags) {
+                return PendingIntent.getActivity(context, requestCode, intent, flags);
+            }
         }
     }
 
