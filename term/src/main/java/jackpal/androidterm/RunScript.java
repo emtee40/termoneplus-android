@@ -95,8 +95,6 @@ public final class RunScript extends RemoteInterface {
             handle = openNewWindow(command);
         }
 
-        Intent result = new Intent();
-        result.putExtra(Application.ARGUMENT_WINDOW_HANDLE, handle);
-        setResult(RESULT_OK, result);
+        setResultWindow(handle);
     }
 }

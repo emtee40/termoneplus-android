@@ -95,6 +95,12 @@ public class RemoteInterface extends RemoteActionActivity {
         startActivity(intent);
     }
 
+    protected void setResultWindow(String handle) {
+        Intent result = new Intent();
+        result.putExtra(Application.ARGUMENT_WINDOW_HANDLE, handle);
+        setResult(RESULT_OK, result);
+    }
+
     protected String openNewWindow(String iInitialCommand) {
         TermService service = getTermService();
 
