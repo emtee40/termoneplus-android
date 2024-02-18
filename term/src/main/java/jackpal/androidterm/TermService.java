@@ -42,6 +42,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.termoneplus.Application;
+import com.termoneplus.BuildConfig;
 import com.termoneplus.R;
 import com.termoneplus.RemoteSession;
 import com.termoneplus.TermActivity;
@@ -266,14 +267,25 @@ public class TermService extends SessionsService {
 
             final PendingIntent result = createResultIntent(sessionHandle);
 
+            final String niceName = getNiceName();
+            if (niceName == null) return null;
+
+            createBoundSession(pseudoTerminalMultiplexerFd, sessionHandle, niceName,
+                    new RBinderCleanupCallback(result, callback));
+            return result.getIntentSender();
+        }
+
+        private String getNiceName() {
             final PackageManager pm = getPackageManager();
             final String[] pkgs = pm.getPackagesForUid(getCallingUid());
-            if (pkgs == null || pkgs.length == 0)
+            if (pkgs == null)
                 return null;
 
             for (String packageName : pkgs) {
                 try {
                     final PackageInfo pkgInfo = PackageManagerCompat.getPackageInfo(pm, packageName);
+                    if (BuildConfig.APPLICATION_ID.equals(pkgInfo.packageName))
+                        continue;
 
                     final ApplicationInfo appInfo = pkgInfo.applicationInfo;
                     if (appInfo == null)
@@ -281,12 +293,8 @@ public class TermService extends SessionsService {
 
                     final CharSequence label = pm.getApplicationLabel(appInfo);
 
-                    if (!TextUtils.isEmpty(label)) {
-                        final String niceName = label.toString();
-                        createBoundSession(pseudoTerminalMultiplexerFd, sessionHandle, niceName,
-                                new RBinderCleanupCallback(result, callback));
-                        return result.getIntentSender();
-                    }
+                    if (!TextUtils.isEmpty(label))
+                        return label.toString();
                 } catch (PackageManager.NameNotFoundException ignore) {
                 }
             }
