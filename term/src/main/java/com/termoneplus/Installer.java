@@ -19,9 +19,9 @@ package com.termoneplus;
 import android.content.res.AssetManager;
 import android.os.Build;
 
+import com.termoneplus.compat.FilesCompat;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -99,8 +99,8 @@ public class Installer {
                 return false;
 
         try {
-            OutputStream os = new FileOutputStream(target);
-            InputStream is = new FileInputStream(source);
+            OutputStream os = FilesCompat.newOutputStream(target);
+            InputStream is = FilesCompat.newInputStream(source);
             int len;
             while ((len = is.read(buf, 0, buflen)) > 0) {
                 os.write(buf, 0, len);
@@ -124,7 +124,7 @@ public class Installer {
         byte[] buf = new byte[buflen];
 
         try {
-            OutputStream os = new FileOutputStream(target);
+            OutputStream os = FilesCompat.newOutputStream(target);
             InputStream is = am.open(asset, AssetManager.ACCESS_STREAMING);
             int len;
             while ((len = is.read(buf, 0, buflen)) > 0) {
