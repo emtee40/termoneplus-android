@@ -18,6 +18,7 @@ package com.termoneplus;
 
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.text.TextUtils;
 
 import com.google.android.material.color.DynamicColors;
 import com.termoneplus.utils.ThemeManager;
@@ -25,6 +26,7 @@ import com.termoneplus.utils.ThemeManager;
 import java.io.File;
 
 import androidx.preference.PreferenceManager;
+import jackpal.androidterm.compat.PathSettings;
 
 
 public class Application extends android.app.Application {
@@ -51,7 +53,7 @@ public class Application extends android.app.Application {
 
     public static Settings settings;
 
-    public static File xbindir;
+    private static File xbindir;
 
     private static File rootdir;
     private static File etcdir;
@@ -75,6 +77,24 @@ public class Application extends android.app.Application {
         return getScriptFile().getPath();
     }
 
+    public static String buildPATH() {
+        String s;
+        String path = Application.xbindir.getPath();
+
+        s = PathSettings.getPrependPathVerified();
+        if (!TextUtils.isEmpty(s))
+            path += File.pathSeparator + s;
+
+        s = System.getenv("PATH");
+        if (!TextUtils.isEmpty(s))
+            path += File.pathSeparator + s;
+
+        s = PathSettings.getAppendPathVerified();
+        if (!TextUtils.isEmpty(s))
+            path += File.pathSeparator + s;
+
+        return path;
+    }
 
     @Override
     public void onCreate() {

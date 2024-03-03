@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class PathSettings {
         collect_path = prefs.getBoolean(key, collect_path);
     }
 
-    public static String getPrependPath() {
+    private static String getPrependPath() {
         return mPrependPath;
     }
 
@@ -68,12 +68,24 @@ public class PathSettings {
         mPrependPath = prependPath;
     }
 
-    public static String getAppendPath() {
+    private static String getAppendPath() {
         return mAppendPath;
     }
 
     public void setAppendPath(String appendPath) {
         mAppendPath = appendPath;
+    }
+
+    public static String getPrependPathVerified() {
+        if (verify_path)
+            return preservePath(mPrependPath);
+        return mPrependPath;
+    }
+
+    public static String getAppendPathVerified() {
+        if (verify_path)
+            return preservePath(mAppendPath);
+        return mAppendPath;
     }
 
     public static String buildPATH() {
@@ -118,6 +130,7 @@ public class PathSettings {
                 new_path.append(File.pathSeparator);
             }
         }
+        if (new_path.length() < 1) return null;
         return new_path.substring(0, new_path.length() - 1);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2018-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jackpal.androidterm.compat.PathSettings;
 import jackpal.androidterm.util.TermSettings;
 
 
@@ -117,7 +116,7 @@ public class ShellTermSession extends GenericTermSession {
 
         Map<String, String> map = new HashMap<>(System.getenv());
         map.put("TERM", settings.getTermType());
-        map.put("PATH", Application.xbindir.getPath() + File.pathSeparator + PathSettings.buildPATH());
+        map.put("PATH", Application.buildPATH());
         map.put("HOME", settings.getHomePath());
         map.put("TMPDIR", Application.getTmpPath());
         map.put("ENV", Application.getScriptFilePath());
