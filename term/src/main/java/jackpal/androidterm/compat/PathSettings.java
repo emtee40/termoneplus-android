@@ -20,11 +20,12 @@ package jackpal.androidterm.compat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.text.TextUtils;
 
 import com.termoneplus.R;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import androidx.preference.PreferenceManager;
 
@@ -60,20 +61,19 @@ public class PathSettings {
         collect_path = prefs.getBoolean(key, collect_path);
     }
 
-    private static String getPrependPath() {
-        return mPrependPath;
-    }
-
     public void setPrependPath(String prependPath) {
         mPrependPath = prependPath;
     }
 
-    private static String getAppendPath() {
-        return mAppendPath;
-    }
-
     public void setAppendPath(String appendPath) {
         mAppendPath = appendPath;
+    }
+
+    public static ArrayList<String> getCollectedPaths() {
+        ArrayList<String> ret = new ArrayList<>(mPrependPath.length() + mAppendPath.length());
+        Collections.addAll(ret, mPrependPath.split(File.pathSeparator));
+        Collections.addAll(ret, mAppendPath.split(File.pathSeparator));
+        return ret;
     }
 
     public static String getPrependPathVerified() {
@@ -88,31 +88,8 @@ public class PathSettings {
         return mAppendPath;
     }
 
-    public static String buildPATH() {
-        String path = System.getenv("PATH");
-        if (path == null) path = "";
-        path = extendPath(path);
-        if (verify_path)
-            path = preservePath(path);
-        return path;
-    }
-
     public static boolean usePathCollection () {
         return collect_path;
-    }
-
-    private static String extendPath(String path) {
-        String s;
-
-        s = getAppendPath();
-        if (!TextUtils.isEmpty(s))
-            path = path + File.pathSeparator + s;
-
-        s = getPrependPath();
-        if (!TextUtils.isEmpty(s))
-            path = s + File.pathSeparator + path;
-
-        return path;
     }
 
     private static String preservePath(String path) {

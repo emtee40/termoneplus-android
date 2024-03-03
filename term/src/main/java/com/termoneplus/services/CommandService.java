@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
     private void printExternalAliases(PrintStream out) {
         final Pattern pattern = Pattern.compile("libexec-(.*).so");
 
-        for (String entry : PathSettings.buildPATH().split(File.pathSeparator)) {
+        for (String entry : PathSettings.getCollectedPaths()) {
             File dir = new File(entry);
 
             File[] cmdlist = null;
