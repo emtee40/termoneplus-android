@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2017-2022 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2017-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.termoneplus.BuildConfig;
 
-import java.io.File;
-import java.text.Collator;
-import java.util.Arrays;
-import java.util.Locale;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -51,6 +49,20 @@ public class PathCollector {
     private int pending;
     private OnPathsReceivedListener callback;
 
+    private static ArrayList<String> makePathListFromBundle(Bundle extras) {
+        if (extras == null || extras.size() < 1)
+            return null;
+
+        ArrayList<String> ret = new ArrayList<>(extras.size());
+        for (String key : extras.keySet()) {
+            String dir = extras.getString(key);
+            if (TextUtils.isEmpty(dir)) continue;
+            ret.add(dir);
+        }
+
+        return ret;
+    }
+
     public void start (Context context) {
         final PathSettings settings = new PathSettings(context);
         if (!PathSettings.usePathCollection()) {
@@ -66,7 +78,7 @@ public class PathCollector {
                 String action = intent.getAction();
                 if (action == null) return;
 
-                String path = makePathFromBundle(getResultExtras(false));
+                ArrayList<String> path = makePathListFromBundle(getResultExtras(false));
                 switch (action) {
                     case ACTION_PATH_PREPEND_BROADCAST:
                         settings.setPrependPath(path);
@@ -93,27 +105,6 @@ public class PathCollector {
         broadcast.setAction(ACTION_PATH_PREPEND_BROADCAST);
         context.sendOrderedBroadcast(broadcast, PERMISSION_PATH_PREPEND_BROADCAST,
                 receiver, null, AppCompatActivity.RESULT_OK, null, null);
-    }
-
-    private static String makePathFromBundle(Bundle extras) {
-        if (extras == null || extras.size() == 0)
-            return "";
-
-        String[] keys = new String[extras.size()];
-        keys = extras.keySet().toArray(keys);
-        Collator collator = Collator.getInstance(Locale.US);
-        Arrays.sort(keys, collator);
-
-        StringBuilder path = new StringBuilder();
-        for (String key : keys) {
-            String dir = extras.getString(key);
-            if (dir != null && !dir.equals("")) {
-                path.append(dir);
-                path.append(File.pathSeparator);
-            }
-        }
-
-        return path.substring(0, path.length() - 1);
     }
 
     public static void extractPreferences(Context context, SharedPreferences prefs) {

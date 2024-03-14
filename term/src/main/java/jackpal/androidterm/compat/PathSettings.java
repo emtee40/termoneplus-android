@@ -20,6 +20,7 @@ package jackpal.androidterm.compat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.text.TextUtils;
 
 import com.termoneplus.R;
 
@@ -31,12 +32,12 @@ import androidx.preference.PreferenceManager;
 
 
 /* NOTE: refactored path settings from TermSettings.java
- * TODO: pending removal as functionality does not support multiple entries.
+ * TODO: pending removal
  */
 @Deprecated
 public class PathSettings {
-    private static String mPrependPath = null;
-    private static String mAppendPath = null;
+    private static String mPrependPath = "";
+    private static String mAppendPath = "";
 
     // extracted from SharedPreferences
     private static boolean verify_path;
@@ -59,14 +60,6 @@ public class PathSettings {
 
         key = context.getString(R.string.key_collect_path_preference);
         collect_path = prefs.getBoolean(key, collect_path);
-    }
-
-    public void setPrependPath(String prependPath) {
-        mPrependPath = prependPath;
-    }
-
-    public void setAppendPath(String appendPath) {
-        mAppendPath = appendPath;
     }
 
     public static ArrayList<String> getCollectedPaths() {
@@ -96,6 +89,7 @@ public class PathSettings {
         String[] entries = path.split(File.pathSeparator);
         StringBuilder new_path = new StringBuilder(path.length());
         for (String entry : entries) {
+            if (TextUtils.isEmpty(entry)) continue;
             File dir = new File(entry);
             try {
                 if (!dir.isDirectory()) continue;
@@ -109,5 +103,24 @@ public class PathSettings {
         }
         if (new_path.length() < 1) return null;
         return new_path.substring(0, new_path.length() - 1);
+    }
+
+    public void setPrependPath(ArrayList<String> paths) {
+        mPrependPath = buildPath(paths);
+    }
+
+    public void setAppendPath(ArrayList<String> paths) {
+        mAppendPath = buildPath(paths);
+    }
+
+    private String buildPath(ArrayList<String> paths) {
+        if (paths == null || paths.size() < 1) return "";
+
+        StringBuilder builder = new StringBuilder();
+        for (String element : paths) {
+            builder.append(element);
+            builder.append(File.pathSeparator);
+        }
+        return builder.substring(0, builder.length() - 1);
     }
 }
