@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.termoneplus.remote.CommandCollector;
 import com.termoneplus.utils.ThemeManager;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import jackpal.androidterm.compat.PathCollector;
 public class RemoteActionActivity extends AppCompatActivity {
     private boolean path_collected = false;
     private TermService term_service = null;
+    private boolean command_collected = false;
 
     private Intent service_intent;
     private ServiceConnection service_connection = new ServiceConnection() {
@@ -84,12 +86,24 @@ public class RemoteActionActivity extends AppCompatActivity {
             msg.setText(R.string.path_collection_progress);
         }
 
-        PathCollector path_collector = new PathCollector();
-        path_collector.setOnPathsReceivedListener(() -> {
-            path_collected = true;
-            processIntent();
-        });
-        path_collector.start(this);
+        // start path collection
+        {
+            PathCollector collector = new PathCollector();
+            collector.setOnPathsReceivedListener(() -> {
+                path_collected = true;
+                processIntent();
+            });
+            collector.start(this);
+        }
+        // start command collection
+        {
+            final CommandCollector collector = new CommandCollector();
+            collector.setOnCommandsConnectedListener(() -> {
+                command_collected = true;
+                processIntent();
+            });
+            collector.start(this);
+        }
 
         service_intent = TermService.start(this);
     }
@@ -133,6 +147,7 @@ public class RemoteActionActivity extends AppCompatActivity {
         /* process intent after path collection and start of service */
         if (term_service == null) return;
         if (!path_collected) return;
+        if (!command_collected) return;
 
         /* intent is required - see onCreate() */
         Intent intent = getIntent();

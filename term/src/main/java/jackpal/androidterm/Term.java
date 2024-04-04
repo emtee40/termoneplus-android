@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (C) 2017-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2017-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ import com.termoneplus.TermPreferencesActivity;
 import com.termoneplus.WindowListActivity;
 import com.termoneplus.WindowListAdapter;
 import com.termoneplus.compat.SoftInputCompat;
+import com.termoneplus.remote.CommandCollector;
 import com.termoneplus.utils.ConsoleStartupScript;
 import com.termoneplus.utils.SimpleClipboardManager;
 import com.termoneplus.utils.WakeLock;
@@ -109,6 +110,7 @@ public class Term extends AppCompatActivity
     private Intent TSIntent;
     private int onResumeSelectWindow = -1;
     private boolean path_collected;
+    private boolean command_collected;
     private TermService mTermService;
     private TermActionBar mActionBar;
     private int mActionBarMode;
@@ -228,6 +230,7 @@ public class Term extends AppCompatActivity
 
         Log.v(Application.APP_TAG, "onCreate");
         path_collected = false;
+        command_collected = false;
         mHandler = new Handler(getMainLooper());
 
         if (icicle == null)
@@ -266,6 +269,14 @@ public class Term extends AppCompatActivity
             });
             path_collector.start(this);
         }
+        if (!command_collected) {
+            final CommandCollector collector = new CommandCollector();
+            collector.setOnCommandsConnectedListener(() -> {
+                command_collected = true;
+                populateSessions();
+            });
+            collector.start(this);
+        }
 
         TSIntent = TermService.start(this);
 
@@ -293,6 +304,7 @@ public class Term extends AppCompatActivity
     private synchronized void populateSessions() {
         if (mTermService == null) return;
         if (!path_collected) return;
+        if (!command_collected) return;
 
         if (mTermService.getSessionCount() == 0) {
             try {

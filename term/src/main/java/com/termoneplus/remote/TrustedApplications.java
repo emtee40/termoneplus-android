@@ -45,9 +45,14 @@ public class TrustedApplications {
         return v.remote;
     }
 
-    public static boolean bind(Context context, String key) {
+    public static boolean bind(Context context, String key, final OnApplicationConnectionListener cb) {
         RemoteConnection v = list.get(key);
         if (v == null) return false;
+
+        v.setOnApplicationConnectionListener((status) -> {
+            if (!status) return;
+            cb.onApplicationConnection();
+        });
 
         return v.bind(context);
     }
@@ -60,18 +65,28 @@ public class TrustedApplications {
     }
 
 
+    public interface OnApplicationConnectionListener {
+        void onApplicationConnection();
+    }
+
     static class RemoteConnection {
         private final ComponentName component;
         private ICommand remote;
+        private OnApplicationConnectionListener callback;
+
         private final ServiceConnection connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 remote = ICommand.Stub.asInterface(service);
+                if (callback == null) return;
+                callback.onApplicationConnection(true);
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 remote = null;
+                if (callback == null) return;
+                callback.onApplicationConnection(false);
             }
         };
 
@@ -79,10 +94,18 @@ public class TrustedApplications {
             component = new ComponentName(application, config_class);
         }
 
+        private void setOnApplicationConnectionListener(OnApplicationConnectionListener listener) {
+            callback = listener;
+        }
+
         private boolean bind(Context context) {
             Intent intent = new Intent(BuildConfig.APPLICATION_ID + ".command.v1")
                     .setComponent(component);
             return context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        }
+
+        private interface OnApplicationConnectionListener {
+            void onApplicationConnection(boolean status);
         }
     }
 }
