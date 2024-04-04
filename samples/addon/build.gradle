@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
+// "TermOne Plus" applicationId
+def termApplicationId = "com.termoneplus"
+
 android {
     namespace 'com.termoneplus.sample.addon'
 
@@ -14,6 +17,8 @@ android {
 
         versionCode 1
         versionName "1.0"
+
+        manifestPlaceholders.termApplicationId = "${termApplicationId}"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -24,6 +29,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        aidl true
+        buildConfig true
     }
 }
 

@@ -23,6 +23,17 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".CommandService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="${termApplicationId}.command.v1"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
