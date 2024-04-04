@@ -58,6 +58,32 @@ public class CommandCollector {
         prn.println(info.path);
     }
 
+    public static void printExternalAliases(PrintStream out) {
+        for (String app : TrustedApplications.list.keySet()) {
+            ICommand remote = TrustedApplications.getRemote(app);
+            if (remote == null) continue;
+
+            String[] app_cmds;
+            try {
+                app_cmds = remote.getCommands();
+            } catch (RemoteException ignore) {
+                continue;
+            }
+            if (app_cmds == null) continue;
+
+            for (String cmd : app_cmds) {
+                CommandInfo info = list.get(cmd);
+                if (info != null) continue;
+                list.put(cmd, new CommandInfo(app));
+            }
+        }
+
+        for (String cmd : list.keySet()) {
+            out.println("alias " + cmd + "='cmdexec " + cmd + "'");
+        }
+        out.flush();
+    }
+
     public void start(Context context) {
         pending = TrustedApplications.list.size();
         new Thread(() -> {

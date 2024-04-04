@@ -20,7 +20,9 @@ import android.os.Process;
 import android.text.TextUtils;
 
 import com.termoneplus.BuildConfig;
+import com.termoneplus.Installer;
 import com.termoneplus.compat.PackageManagerCompat;
+import com.termoneplus.remote.CommandCollector;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -122,6 +124,9 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             case "get aliases":
                 printAliases(baseout);
                 break;
+            case "get cmd_path":
+                handleCommandPath(in, baseout);
+                break;
         }
     }
 
@@ -132,6 +137,8 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         out.println("alias sh='sh -i'");
 
         printExternalAliases(out);
+        if (!TextUtils.isEmpty(Installer.APPEXEC_COMMAND))
+            CommandCollector.printExternalAliases(out);
         out.flush();
     }
 
@@ -155,5 +162,39 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
                 printExternalAliases(pb, out);
             }
         }
+    }
+
+    private ArrayList<String> getArguments(BufferedReader in) throws IOException {
+        // Note "end of line" command is required.
+        ArrayList<String> args = new ArrayList<>();
+        boolean eol = false;
+        do {
+            String line = in.readLine();
+            if (TextUtils.isEmpty(line)) break;
+            if ("<eol>".equals(line)) {
+                eol = true;
+                break;
+            }
+            args.add(line);
+        } while (true);
+        return eol ? args : null;
+    }
+
+    private void endResponse(OutputStream baseout) throws IOException {
+        baseout.flush();
+
+        PrintStream out = new PrintStream(baseout);
+        out.println("<eol>");
+        out.flush();
+    }
+
+    private void handleCommandPath(BufferedReader in, OutputStream out) throws IOException {
+        if (TextUtils.isEmpty(Installer.APPEXEC_COMMAND)) return;
+
+        ArrayList<String> args = getArguments(in);
+        if (args == null) return;
+
+        CommandCollector.writeCommandPath(args, out);
+        endResponse(out);
     }
 }

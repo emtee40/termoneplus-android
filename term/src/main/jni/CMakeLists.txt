@@ -1,5 +1,5 @@
 ##
-# Copyright (C) 2019 Roumen Petrov.  All rights reserved.
+# Copyright (C) 2019-2024 Roumen Petrov.  All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,6 +35,27 @@ target_compile_options(
 )
 target_link_libraries(
         libexec-t1plus.so
+        -pie
+)
+
+add_executable(
+        libcmd-t1plus.so
+        cmdexec.c
+        socket.c
+        atomicio.c
+)
+target_compile_definitions(
+        libcmd-t1plus.so
+        PRIVATE
+        PACKAGE_NAME="${APPLICATION_ID}"
+)
+target_compile_options(
+        libcmd-t1plus.so
+        PRIVATE
+        -fPIC
+)
+target_link_libraries(
+        libcmd-t1plus.so
         -pie
 )
 
