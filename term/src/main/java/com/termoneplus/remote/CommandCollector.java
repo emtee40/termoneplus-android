@@ -17,10 +17,17 @@
 package com.termoneplus.remote;
 
 import android.content.Context;
+import android.os.RemoteException;
 
 import com.termoneplus.v1.ICommand;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
 
 
 /**
@@ -36,6 +43,20 @@ public class CommandCollector {
     private int pending = 0;
     private OnCommandsConnectedListener callback;
 
+    public static void writeCommandPath(@NonNull ArrayList<String> args, OutputStream out) {
+        //noinspection SizeReplaceableByIsEmpty
+        if (args.size() < 1) return;
+
+        String cmd = args.get(0);
+        CommandInfo info = list.get(cmd);
+        if (info == null) return;
+
+        info.getPath(cmd);
+        if (info.path == null) return;
+
+        PrintStream prn = new PrintStream(out);
+        prn.println(info.path);
+    }
 
     public void start(Context context) {
         pending = TrustedApplications.list.size();
@@ -69,9 +90,32 @@ public class CommandCollector {
 
     private static class CommandInfo {
         private final String app;
+        private String path;
 
         CommandInfo(String app) {
             this.app = app;
+        }
+
+        private void getPath(String cmd) {
+            if (path != null) {
+                File exe = new File(path);
+                if (!exe.exists()) {
+                    // path may change on trusted application upgrade/preinstallation
+                    path = null;
+                }
+            }
+            if (path != null) return;
+
+            ICommand remote = TrustedApplications.getRemote(app);
+            if (remote == null) return;
+
+            {
+                try {
+                    // trust result
+                    path = remote.getPath(cmd);
+                } catch (RemoteException ignore) {
+                }
+            }
         }
     }
 }

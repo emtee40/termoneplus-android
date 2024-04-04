@@ -10,6 +10,7 @@ android {
 
     compileSdk rootProject.ext.compileSdk
     buildToolsVersion = rootProject.ext.buildToolsVersion
+    ndkVersion rootProject.ext.ndkVersion
     defaultConfig {
         applicationId "com.termoneplus.sample.addon"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -19,6 +20,11 @@ android {
         versionName "1.0"
 
         manifestPlaceholders.termApplicationId = "${termApplicationId}"
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -33,6 +39,11 @@ android {
     buildFeatures {
         aidl true
         buildConfig true
+    }
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
     }
 }
 

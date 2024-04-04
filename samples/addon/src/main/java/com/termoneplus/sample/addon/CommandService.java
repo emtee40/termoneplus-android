@@ -37,7 +37,13 @@ public class CommandService extends Service {
     private static final class RBinder extends ICommand.Stub {
         public String[] getCommands() {
             return new String[]{
+                    "addon1",
+                    "addon2",
             };
+        }
+
+        public String getPath(String cmd) {
+            return Application.xbindir.getPath() + "/libcmd-addon.so";
         }
     }
 }

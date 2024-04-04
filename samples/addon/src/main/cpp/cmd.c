@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package com.termoneplus.v1;
+#include <stdio.h>
+#include <sysexits.h>
 
+extern char **environ;
 
-interface ICommand {
-    String[] getCommands();
+int
+main(int argc, char *argv[]/*, char *envp[]*/) {
+    int k;
+    char **env;
 
-    String getPath(in String cmd);
+    printf("Hello world!\n");
+    for (k = 0; k < argc; k++) {
+        printf("arg[%d]: '%s'\n", k, argv[k]);
+    }
+
+    return EX_OK;
 }

@@ -19,4 +19,6 @@ package com.termoneplus.v1;
 
 interface ICommand {
     String[] getCommands();
+
+    String getPath(in String cmd);
 }
