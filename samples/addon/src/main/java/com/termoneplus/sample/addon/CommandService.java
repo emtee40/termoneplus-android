@@ -22,6 +22,8 @@ import android.os.IBinder;
 
 import com.termoneplus.v1.ICommand;
 
+import java.util.ArrayList;
+
 
 public class CommandService extends Service {
     @Override
@@ -42,8 +44,20 @@ public class CommandService extends Service {
             };
         }
 
+        @Override
         public String getPath(String cmd) {
             return Application.xbindir.getPath() + "/libcmd-addon.so";
+        }
+
+        @Override
+        public String[] getEnvironment(String cmd) {
+            if (!"addon2".equals(cmd)) return new String[0];
+
+            ArrayList<String> env = new ArrayList<>();
+
+            String cmd_conf = Application.etcdir.getPath() + "/addon.conf";
+            env.add("ADDON_CONF=" + cmd_conf);
+            return env.toArray(new String[0]);
         }
     }
 }

@@ -21,4 +21,5 @@ interface ICommand {
     String[] getCommands();
 
     String getPath(in String cmd);
+    String[] getEnvironment(in String cmd);
 }

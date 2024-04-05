@@ -127,6 +127,9 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             case "get cmd_path":
                 handleCommandPath(in, baseout);
                 break;
+            case "get cmd_env":
+                handleCommandEnvironment(in, baseout);
+                break;
         }
     }
 
@@ -195,6 +198,14 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         if (args == null) return;
 
         CommandCollector.writeCommandPath(args, out);
+        endResponse(out);
+    }
+
+    private void handleCommandEnvironment(BufferedReader in, OutputStream out) throws IOException {
+        ArrayList<String> args = getArguments(in);
+        if (args == null) return;
+
+        CommandCollector.writeCommandEnvironment(args, out);
         endResponse(out);
     }
 }

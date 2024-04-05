@@ -58,6 +58,23 @@ public class CommandCollector {
         prn.println(info.path);
     }
 
+    public static void writeCommandEnvironment(@NonNull ArrayList<String> args, OutputStream out) {
+        //noinspection SizeReplaceableByIsEmpty
+        if (args.size() < 1) return;
+
+        String cmd = args.get(0);
+        CommandInfo info = list.get(cmd);
+        if (info == null) return;
+
+        info.getEnv(cmd);
+        if (info.env == null) return;
+
+        PrintStream prn = new PrintStream(out);
+        for (String item : info.env) {
+            prn.println(item);
+        }
+    }
+
     public static void printExternalAliases(PrintStream out) {
         for (String app : TrustedApplications.list.keySet()) {
             ICommand remote = TrustedApplications.getRemote(app);
@@ -117,6 +134,7 @@ public class CommandCollector {
     private static class CommandInfo {
         private final String app;
         private String path;
+        private String[] env;
 
         CommandInfo(String app) {
             this.app = app;
@@ -139,6 +157,21 @@ public class CommandCollector {
                 try {
                     // trust result
                     path = remote.getPath(cmd);
+                } catch (RemoteException ignore) {
+                }
+            }
+        }
+
+        private void getEnv(String cmd) {
+            if (env != null) return;
+
+            ICommand remote = TrustedApplications.getRemote(app);
+            if (remote == null) return;
+
+            {
+                try {
+                    // trust result
+                    env = remote.getEnvironment(cmd);
                 } catch (RemoteException ignore) {
                 }
             }
