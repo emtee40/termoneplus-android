@@ -59,6 +59,22 @@ target_link_libraries(
         -pie
 )
 
+add_library(
+        appwrap
+        SHARED
+        t1p-wrap.c
+        socket.c
+        atomicio.c
+)
+target_compile_definitions(
+        appwrap
+        PRIVATE
+        PACKAGE_NAME="${APPLICATION_ID}"
+)
+target_link_libraries(
+        appwrap
+)
+
 # used if ABI < 16
 add_executable(
         libexeo-t1plus.so

@@ -17,6 +17,10 @@
 #include <stdio.h>
 #include <sysexits.h>
 #include <string.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
 
 extern char **environ;
 
@@ -74,6 +78,25 @@ main(int argc, char *argv[]/*, char *envp[]*/) {
         /*exclude "system" environment for demo command*/
         if (is_system_env(*env)) continue;
         printf("env: '%s'\n", *env);
+    }
+    {
+        char *conf = getenv("ADDON_CONF");
+        if (conf != NULL) {
+            int fd = open(conf, O_CLOEXEC);
+            if (fd == -1)
+                fprintf(stderr, "open fail: %s\n", strerror(errno));
+            else {
+                printf("conf '%s':\n", conf);
+                while (1) {
+                    char buf[4096];
+                    ssize_t len = read(fd, buf, sizeof(buf));
+                    if (len <= 0) break;
+                    write(STDOUT_FILENO, buf, len);
+                }
+                fsync(STDOUT_FILENO);
+                close(fd);
+            }
+        }
     }
 
     return EX_OK;

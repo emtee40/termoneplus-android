@@ -20,13 +20,24 @@ project("addon-c")
 add_executable(
         libcmd-addon.so
         cmd.c
+        cmdwrap.c
 )
 target_compile_options(
         libcmd-addon.so
         PRIVATE
         -fPIC
+        # build without fortify!
+        -U_FORTIFY_SOURCE
 )
 target_link_libraries(
         libcmd-addon.so
+        appwrap
         -pie
+        -Wl,--wrap=open
+)
+
+add_library(
+        appwrap
+        SHARED
+        t1p-stub.c
 )
