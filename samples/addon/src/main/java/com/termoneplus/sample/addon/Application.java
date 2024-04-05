@@ -19,6 +19,10 @@ package com.termoneplus.sample.addon;
 import android.content.Context;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 
 public class Application extends android.app.Application {
@@ -35,6 +39,8 @@ public class Application extends android.app.Application {
         etcdir = new File(rootdir, "etc");
         libdir = new File(context.getApplicationInfo().nativeLibraryDir);
         xbindir = libdir;
+
+        Installer.sysconfigCreate();
     }
 
 
@@ -42,5 +48,38 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         setPaths(this);
+    }
+
+    private static class Installer {
+        private static void sysconfigCreate() {
+            if (!etcdir.exists())
+                if (!etcdir.mkdir()) return;
+
+            createConfigurationFile("addon.conf");
+        }
+
+        private static void createConfigurationFile(String name) {
+            File conf = new File(etcdir.getPath(), name);
+            try {
+                if (!conf.createNewFile()) return;
+            } catch (IOException ignore) {
+                return;
+            }
+            PrintStream out;
+            try {
+                // avoid unhandled FileNotFoundException
+                out = new PrintStream(new FileOutputStream(conf));
+            } catch (FileNotFoundException ignore) {
+                return;
+            }
+            out.println("addon configuration: " + name);
+            out.println("addon line 1 ...");
+            out.println("addon line 2 ...");
+            out.println("addon line 3 ...");
+            out.println("addon line 4 ...");
+            out.println("addon line 5 ...");
+            out.println("addon configuration^");
+            out.flush();
+        }
     }
 }

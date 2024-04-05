@@ -130,6 +130,9 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             case "get cmd_env":
                 handleCommandEnvironment(in, baseout);
                 break;
+            case "open sysconfig":
+                handleCommandConfiguration(in, baseout);
+                break;
         }
     }
 
@@ -207,5 +210,12 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
 
         CommandCollector.writeCommandEnvironment(args, out);
         endResponse(out);
+    }
+
+    private void handleCommandConfiguration(BufferedReader in, OutputStream out) throws IOException {
+        ArrayList<String> args = getArguments(in);
+        if (args == null) return;
+
+        CommandCollector.openCommandConfiguration(args, out);
     }
 }

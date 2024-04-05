@@ -17,11 +17,16 @@
 package com.termoneplus.remote;
 
 import android.content.Context;
+import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 
+import com.termoneplus.utils.Stream;
 import com.termoneplus.v1.ICommand;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -72,6 +77,27 @@ public class CommandCollector {
         PrintStream prn = new PrintStream(out);
         for (String item : info.env) {
             prn.println(item);
+        }
+    }
+
+    public static void openCommandConfiguration(@NonNull ArrayList<String> args, OutputStream out) {
+        if (args.size() < 2) return;
+
+        String cmd = args.get(0);
+        CommandInfo info = list.get(cmd);
+        if (info == null) return;
+
+        String path = args.get(1);
+        ParcelFileDescriptor pfd = info.openSysconfig(path);
+        if (pfd == null) return;
+
+        FileDescriptor fd = pfd.getFileDescriptor();
+        if (fd == null) return;
+
+        FileInputStream in = new FileInputStream(fd);
+        try {
+            Stream.copy(in, out);
+        } catch (IOException ignore) {
         }
     }
 
@@ -175,6 +201,17 @@ public class CommandCollector {
                 } catch (RemoteException ignore) {
                 }
             }
+        }
+
+        private ParcelFileDescriptor openSysconfig(String path) {
+            ICommand remote = TrustedApplications.getRemote(app);
+            if (remote == null) return null;
+
+            try {
+                return remote.openConfiguration(path);
+            } catch (RemoteException ignore) {
+            }
+            return null;
         }
     }
 }

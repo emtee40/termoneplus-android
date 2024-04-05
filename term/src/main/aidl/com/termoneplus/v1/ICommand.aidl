@@ -22,4 +22,6 @@ interface ICommand {
 
     String getPath(in String cmd);
     String[] getEnvironment(in String cmd);
+
+    ParcelFileDescriptor openConfiguration(in String path);
 }

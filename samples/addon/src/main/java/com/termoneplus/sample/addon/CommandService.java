@@ -19,9 +19,15 @@ package com.termoneplus.sample.addon;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
 
 import com.termoneplus.v1.ICommand;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -58,6 +64,26 @@ public class CommandService extends Service {
             String cmd_conf = Application.etcdir.getPath() + "/addon.conf";
             env.add("ADDON_CONF=" + cmd_conf);
             return env.toArray(new String[0]);
+        }
+
+        @Override
+        public ParcelFileDescriptor openConfiguration(String path) {
+            if ("/etc/addon.conf".equals(path))
+                return open_sysconfig("addon.conf");
+            return null;
+        }
+
+        private ParcelFileDescriptor open_sysconfig(String name) {
+            try {
+                File conf = new File(Application.etcdir.getPath(), name);
+                try (FileInputStream in = new FileInputStream(conf)) {
+                    FileDescriptor fd = in.getFD();
+                    return ParcelFileDescriptor.dup(fd);
+                }
+            } catch (FileNotFoundException ignore) {
+            } catch (IOException ignore) {
+            }
+            return null;
         }
     }
 }
