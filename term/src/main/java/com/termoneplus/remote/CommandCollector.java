@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 
+import com.termoneplus.Application;
 import com.termoneplus.utils.Stream;
 import com.termoneplus.v1.ICommand;
 
@@ -78,6 +79,10 @@ public class CommandCollector {
         for (String item : info.env) {
             prn.println(item);
         }
+
+        // setup "TermOne Plus" environment
+        prn.println("LD_LIBRARY_PATH=" + Application.buildLoaderLibraryPath());
+        prn.println("T1P_SESSION_UID=" + android.os.Process.myUid());
     }
 
     public static void openCommandConfiguration(@NonNull ArrayList<String> args, OutputStream out) {

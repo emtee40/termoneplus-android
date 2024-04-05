@@ -96,6 +96,13 @@ public class Application extends android.app.Application {
         return path;
     }
 
+    public static String buildLoaderLibraryPath() {
+        String path = System.getenv("LD_LIBRARY_PATH");
+        if (path != null)
+            return Application.libdir.getPath() + File.pathSeparator + path;
+        return Application.libdir.getPath();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

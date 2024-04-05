@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2019-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdlib.h>
 
 #include "appinfo.h"
 
@@ -32,6 +33,8 @@ int/*bool*/
 get_socketname(char *buf, size_t len) {
     int ret;
 
+    if (uid == NULL)
+        uid = getenv("T1P_SESSION_UID");
     if (uid != NULL)
         ret = snprintf(buf, len, "%s-app_info-%s", PACKAGE_NAME, uid);
     else
