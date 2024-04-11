@@ -8,23 +8,25 @@ gimp_convert() {
   # launcher icon size = 32 dp * ( dpi / 160 ) * 1.5
   size=`expr $dpi \* 3 / 10`
 
-  # start gimp with python-fu batch-interpreter
-  gimp -i --batch-interpreter=python-fu-eval -b - << EOF
-import gimpfu
+  # start gimp with script-fu batch-interpreter
+  gimp -i --batch-interpreter=plug-in-script-fu-eval -b - << EOF
+(define (convert xcf_file png_file)
+  (let*
+    (
+      (img (car (gimp-file-load RUN-NONINTERACTIVE xcf_file xcf_file)))
+      (layer (car (gimp-image-merge-visible-layers img CLIP-TO-IMAGE)))
+    )
 
-def convert(xcf_file, png_file):
-    img = pdb.gimp_file_load(xcf_file, xcf_file)
-    layer = pdb.gimp_image_merge_visible_layers(img, 1)
+    (gimp-image-scale img $size $size)
 
-    #pdb.gimp_image_convert_indexed(img, NO_DITHER, MAKE_PALETTE, 255, False, True, '');
-    pdb.gimp_image_scale(img, $size, $size);
+    (gimp-file-save RUN-NONINTERACTIVE img layer png_file png_file)
+    (gimp-image-delete img)
+  )
+)
 
-    pdb.gimp_file_save(img, layer, png_file, png_file)
-    pdb.gimp_image_delete(img)
+(convert "$XCFFILE" "../term/src/main/res/$PNGFILE")
 
-convert('$XCFFILE', '../term/src/main/res/$PNGFILE')
-
-pdb.gimp_quit(1)
+(gimp-quit 1)
 EOF
 }
 
