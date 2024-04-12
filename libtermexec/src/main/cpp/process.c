@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,10 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <wait.h>
+
+int android_grantpt(int fd);
+
+#define grantpt android_grantpt
 
 
 static char *
@@ -96,10 +100,7 @@ process_create_subprocess(
     fcntl(ptm, F_SETFD, FD_CLOEXEC);
 
     /* openpty part for amaster ... */
-    if (grantpt(ptm) < 0) {
-        /* bionic stub that returns zero */
-        return -1;
-    }
+    if (grantpt(ptm) < 0) return -1;
 
     if (unlockpt(ptm) < 0) {
         throwIOException(env, "unlockpt fail / error %d/%s",

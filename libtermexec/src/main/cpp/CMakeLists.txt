@@ -24,6 +24,7 @@ add_library(
         process.c
         termio.c
         compat.c
+        grantpt.c
 )
 target_link_libraries(
         term-system
