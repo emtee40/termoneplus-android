@@ -42,7 +42,6 @@ f) XCFFILE=../docs/termoneplus-launcher-icon.xcf;;
 m) XCFFILE=../docs/termoneplus-launcher-bw_icon.xcf;;
 *) exit 99;;
 esac
-echo "source image date : $FAKETIME" >&2
 
 for MODE in l m h xh xxh xxxh ; do
   case "$MODE" in
