@@ -20,6 +20,8 @@ import android.content.Context;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
+
 import com.termoneplus.Application;
 import com.termoneplus.utils.Stream;
 import com.termoneplus.v1.ICommand;
@@ -32,8 +34,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import androidx.annotation.NonNull;
 
 
 /**
@@ -81,7 +81,10 @@ public class CommandCollector {
         }
 
         // setup "TermOne Plus" environment
-        prn.println("LD_LIBRARY_PATH=" + Application.buildLoaderLibraryPath());
+        String libpath = Application.buildLoaderLibraryPath();
+        File cmdpath = new File(info.path);
+        File cmddir = cmdpath.getParentFile();
+        prn.println("LD_LIBRARY_PATH=" + libpath + File.pathSeparator + cmddir);
         prn.println("T1P_SESSION_UID=" + android.os.Process.myUid());
     }
 

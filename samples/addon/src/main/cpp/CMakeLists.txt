@@ -31,9 +31,16 @@ target_compile_options(
 )
 target_link_libraries(
         libcmd-addon.so
+        addon
         appwrap
         -pie
         -Wl,--wrap=open
+)
+
+add_library(
+        addon
+        SHARED
+        cmdext.c
 )
 
 add_library(
