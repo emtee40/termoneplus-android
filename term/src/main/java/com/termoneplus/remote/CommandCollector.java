@@ -96,14 +96,13 @@ public class CommandCollector {
         if (info == null) return;
 
         String path = args.get(1);
-        ParcelFileDescriptor pfd = info.openSysconfig(path);
-        if (pfd == null) return;
+        try (ParcelFileDescriptor pfd = info.openSysconfig(path)) {
+            if (pfd == null) return;
 
-        FileDescriptor fd = pfd.getFileDescriptor();
-        if (fd == null) return;
+            FileDescriptor fd = pfd.getFileDescriptor();
+            if (fd == null) return;
 
-        FileInputStream in = new FileInputStream(fd);
-        try {
+            FileInputStream in = new FileInputStream(fd);
             Stream.copy(in, out);
         } catch (IOException ignore) {
         }
