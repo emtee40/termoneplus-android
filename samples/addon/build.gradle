@@ -19,6 +19,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        manifestPlaceholders.applicationIdSuffix = ""
+
         manifestPlaceholders.termApplicationId = "${termApplicationId}"
     }
     externalNativeBuild {
@@ -31,6 +33,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
+        debug {
+            defaultConfig {
+                applicationIdSuffix ".devel"
+
+                // NOTE: used in third party development applications
+                manifestPlaceholders.applicationIdSuffix = "${applicationIdSuffix}"
+            }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

@@ -30,7 +30,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="${termApplicationId}.command.v1"/>
+                <action android:name="${termApplicationId}${applicationIdSuffix}.command.v1"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>

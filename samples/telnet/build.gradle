@@ -22,6 +22,11 @@ android {
     productFlavors {
     }
     buildTypes {
+        debug {
+            defaultConfig {
+                applicationIdSuffix ".devel"
+            }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'

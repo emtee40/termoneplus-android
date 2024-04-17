@@ -268,7 +268,7 @@
             <data android:scheme="mailto"/>
         </intent>
 
-        <package android:name="com.termoneplus.sample.addon">
+        <package android:name="com.termoneplus.sample.addon${applicationIdSuffix}">
             <!-- command provider -->
         </package>
     </queries>

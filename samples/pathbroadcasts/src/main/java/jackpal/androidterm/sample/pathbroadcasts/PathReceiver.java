@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2012 Steven Luo
+ * Copyright (C) 2016-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +33,10 @@ import java.io.OutputStream;
 
 @Deprecated
 public class PathReceiver extends BroadcastReceiver {
+    public static final String TERM_BROADCAST = BuildConfig.TERM_APPLICATION_ID + BuildConfig.APPLICATION_ID_SUFFIX + ".broadcast";
 
-    public static final String ACTION_PATH_APPEND_BROADCAST = BuildConfig.TERM_APPLICATION_ID + ".broadcast.APPEND_TO_PATH";
-    public static final String ACTION_PATH_PREPEND_BROADCAST = BuildConfig.TERM_APPLICATION_ID + ".broadcast.PREPEND_TO_PATH";
+    public static final String ACTION_PATH_APPEND_BROADCAST = TERM_BROADCAST + ".APPEND_TO_PATH";
+    public static final String ACTION_PATH_PREPEND_BROADCAST = TERM_BROADCAST + ".PREPEND_TO_PATH";
 
     /**
      * Called when a broadcast matching the declared intent filters is
