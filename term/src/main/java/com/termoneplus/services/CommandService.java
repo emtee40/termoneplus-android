@@ -133,6 +133,10 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
             case "open sysconfig":
                 handleCommandConfiguration(in, baseout);
                 break;
+            // TODO @Deprecated
+            case "legacy app_dir":
+                legacyCommandDirectory(in, baseout);
+                break;
         }
     }
 
@@ -217,5 +221,13 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         if (args == null) return;
 
         CommandCollector.openCommandConfiguration(args, out);
+    }
+
+    // TODO @Deprecated
+    private void legacyCommandDirectory(BufferedReader in, OutputStream out) throws IOException {
+        ArrayList<String> args = getArguments(in);
+        if (args == null) return;
+
+        CommandCollector.legacyCommandDirectory(args, out);
     }
 }

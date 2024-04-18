@@ -108,6 +108,21 @@ public class CommandCollector {
         }
     }
 
+    // TODO @Deprecated
+    public static void legacyCommandDirectory(@NonNull ArrayList<String> args, OutputStream out) {
+        if (args.size() < 2) return;
+
+        String cmd = args.get(0);
+        CommandInfo info = list.get(cmd);
+        if (info == null) return;
+
+        String path = info.legacyCommandDirectory(args.get(1));
+        if (path == null) return;
+
+        PrintStream prn = new PrintStream(out);
+        prn.println(path);
+    }
+
     public static void printExternalAliases(PrintStream out) {
         for (String app : TrustedApplications.list.keySet()) {
             ICommand remote = TrustedApplications.getRemote(app);
@@ -216,6 +231,18 @@ public class CommandCollector {
 
             try {
                 return remote.openConfiguration(path);
+            } catch (RemoteException ignore) {
+            }
+            return null;
+        }
+
+        // TODO @Deprecated
+        private String legacyCommandDirectory(String code) {
+            ICommand remote = TrustedApplications.getRemote(app);
+            if (remote == null) return null;
+
+            try {
+                return remote.legacyAppDir(code);
             } catch (RemoteException ignore) {
             }
             return null;

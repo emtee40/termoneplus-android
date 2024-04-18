@@ -20,8 +20,11 @@ package com.termoneplus.v1;
 interface ICommand {
     String[] getCommands();
 
+    @nullable
     String getPath(in String cmd);
+
     String[] getEnvironment(in String cmd);
 
+    @nullable
     ParcelFileDescriptor openConfiguration(in String path);
 }

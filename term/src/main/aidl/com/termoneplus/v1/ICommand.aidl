@@ -18,10 +18,16 @@ package com.termoneplus.v1;
 
 
 interface ICommand {
-    String[] getCommands();
+    String[] getCommands() = 0;
 
-    String getPath(in String cmd);
-    String[] getEnvironment(in String cmd);
+    @nullable
+    String getPath(in String cmd) = 1;
 
-    ParcelFileDescriptor openConfiguration(in String path);
+    String[] getEnvironment(in String cmd) = 2;
+
+    @nullable
+    ParcelFileDescriptor openConfiguration(in String path) = 3;
+
+    /** @deprecated, TODO remove transaction code from methods as well */
+    String legacyAppDir(in String code) = 99;
 }

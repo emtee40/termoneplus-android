@@ -75,6 +75,23 @@ target_link_libraries(
         appwrap
 )
 
+# TODO deprecated
+add_library(
+        appinfo
+        SHARED
+        appinfo.c
+        socket.c
+        atomicio.c
+)
+target_compile_definitions(
+        appinfo
+        PRIVATE
+        PACKAGE_NAME="${APPLICATION_ID}"
+)
+target_link_libraries(
+        appinfo
+)
+
 # used if ABI < 16
 add_executable(
         libexeo-t1plus.so
