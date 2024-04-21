@@ -20,12 +20,13 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
 
+import androidx.preference.PreferenceManager;
+
 import com.google.android.material.color.DynamicColors;
 import com.termoneplus.utils.ThemeManager;
 
 import java.io.File;
 
-import androidx.preference.PreferenceManager;
 import jackpal.androidterm.compat.PathSettings;
 
 
@@ -96,11 +97,17 @@ public class Application extends android.app.Application {
         return path;
     }
 
-    public static String buildLoaderLibraryPath() {
-        String path = System.getenv("LD_LIBRARY_PATH");
-        if (path != null)
-            return Application.libdir.getPath() + File.pathSeparator + path;
-        return Application.libdir.getPath();
+    public static String buildLoaderLibraryPath(String extra) {
+        String path = Application.libdir.getPath();
+
+        if (!TextUtils.isEmpty(extra))
+            path += File.pathSeparator + extra;
+
+        String orig = System.getenv("LD_LIBRARY_PATH");
+        if (!TextUtils.isEmpty(orig))
+            path += File.pathSeparator + orig;
+
+        return path;
     }
 
     @Override

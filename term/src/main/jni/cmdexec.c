@@ -306,8 +306,9 @@ main(int argc, char *argv[]) {
 
     if (!set_environment(argv[2]))
         return EX_SOFTWARE;
+    setenv("T1P_SESSION_UID", uid, 1);
 
-    argv += 2;/*skip "wrapper" command and uid*/;
+    argv += 2;/*skip "wrapper" command and uid*/
 
     (void) execv(cmd, argv);
     return EX_SOFTWARE;

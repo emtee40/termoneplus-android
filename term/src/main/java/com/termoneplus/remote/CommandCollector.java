@@ -80,12 +80,12 @@ public class CommandCollector {
             prn.println(item);
         }
 
-        // setup "TermOne Plus" environment
-        String libpath = Application.buildLoaderLibraryPath();
+        // setup "loader" environment
         File cmdpath = new File(info.path);
         File cmddir = cmdpath.getParentFile();
-        prn.println("LD_LIBRARY_PATH=" + libpath + File.pathSeparator + cmddir);
-        prn.println("T1P_SESSION_UID=" + android.os.Process.myUid());
+        String libpath = (cmddir != null) ? cmddir.getPath() : null;
+        libpath = Application.buildLoaderLibraryPath(libpath);
+        prn.println("LD_LIBRARY_PATH=" + libpath);
     }
 
     public static void openCommandConfiguration(@NonNull ArrayList<String> args, OutputStream out) {
