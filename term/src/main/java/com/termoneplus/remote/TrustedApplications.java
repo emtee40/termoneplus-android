@@ -35,10 +35,10 @@ public class TrustedApplications {
         list = new HashMap<>();
         // keep synchronised with package "queries" in Android manifest
         list.put("sb", new RemoteConnection(
-                "com.termoneplus.securebox",
+                "com.termoneplus.securebox" + BuildConfig.APPLICATION_ID_SUFFIX,
                 "com.termoneplus.services.CommandService"));
         list.put("demo", new RemoteConnection(
-                "com.termoneplus.sample.addon",
+                "com.termoneplus.sample.addon" + BuildConfig.APPLICATION_ID_SUFFIX,
                 "com.termoneplus.sample.addon.CommandService"));
     }
 

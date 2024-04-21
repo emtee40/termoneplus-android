@@ -18,7 +18,9 @@ android {
         versionCode 210
         versionName '2.1.0'
 
-        // TermOnePlus applicationId
+        manifestPlaceholders.applicationIdSuffix = ""
+        buildConfigField("String", "APPLICATION_ID_SUFFIX", "\"\"")
+
         manifestPlaceholders.termApplicationId = "${termApplicationId}"
         buildConfigField("String", "TERM_APPLICATION_ID", "\"${termApplicationId}\"")
     }
@@ -29,6 +31,13 @@ android {
     productFlavors {
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".devel"
+
+            // NOTE: used in third party development applications
+            manifestPlaceholders.applicationIdSuffix = "${applicationIdSuffix}"
+            buildConfigField("String", "APPLICATION_ID_SUFFIX", "\"${applicationIdSuffix}\"")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'

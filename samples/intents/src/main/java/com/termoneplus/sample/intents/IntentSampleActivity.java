@@ -21,14 +21,16 @@ import androidx.core.app.ActivityCompat;
 
 
 public class IntentSampleActivity extends AppCompatActivity {
+    private static final String TERM_APPLICATION_ID = BuildConfig.TERM_APPLICATION_ID + BuildConfig.APPLICATION_ID_SUFFIX;
 
-    private static final String ACTION_OPEN_NEW_WINDOW = BuildConfig.TERM_APPLICATION_ID + ".OPEN_NEW_WINDOW";
-    private static final String ACTION_RUN_SCRIPT = BuildConfig.TERM_APPLICATION_ID + ".RUN_SCRIPT";
+
+    private static final String ACTION_OPEN_NEW_WINDOW = TERM_APPLICATION_ID + ".OPEN_NEW_WINDOW";
+    private static final String ACTION_RUN_SCRIPT = TERM_APPLICATION_ID + ".RUN_SCRIPT";
 
     private static final String ARGUMENT_WINDOW_HANDLE = "com.termoneplus.WindowHandle";
     private static final String ARGUMENT_SHELL_COMMAND = "com.termoneplus.Command";
 
-    private static final String PERMISSION_RUN_SCRIPT = BuildConfig.TERM_APPLICATION_ID + ".permission.RUN_SCRIPT";
+    private static final String PERMISSION_RUN_SCRIPT = TERM_APPLICATION_ID + ".permission.RUN_SCRIPT";
     private static final int REQUEST_PERMISSION_RUN_SCRIPT = 101;
 
     private final ActivityResultLauncher<Intent> request_window_handle =
