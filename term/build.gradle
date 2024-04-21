@@ -15,8 +15,8 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        versionCode 471
-        versionName '4.7.1'
+        versionCode 500
+        versionName '5.0.0'
 
         manifestPlaceholders.applicationIdSuffix = ""
         buildConfigField("String", "APPLICATION_ID_SUFFIX", "\"\"")
