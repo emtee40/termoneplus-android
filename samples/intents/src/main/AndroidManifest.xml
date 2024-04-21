@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="${termApplicationId}${applicationIdSuffix}.permission.RUN_SCRIPT"/>
+    <uses-permission android:name="${termApplicationId}.permission.RUN_SCRIPT"/>
 
     <application
         android:allowBackup="false"

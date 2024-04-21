@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="${termApplicationId}${applicationIdSuffix}.permission.APPEND_TO_PATH"/>
+    <uses-permission android:name="${termApplicationId}.permission.APPEND_TO_PATH"/>
     <!-- Declare this if you want to receive PATH prepend broadcasts -->
-    <uses-permission android:name="${termApplicationId}${applicationIdSuffix}.permission.PREPEND_TO_PATH"/>
+    <uses-permission android:name="${termApplicationId}.permission.PREPEND_TO_PATH"/>
 
     <application
         android:allowBackup="false"
@@ -16,10 +16,10 @@
             android:name=".PathReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="${termApplicationId}${applicationIdSuffix}.broadcast.APPEND_TO_PATH"/>
+                <action android:name="${termApplicationId}.broadcast.APPEND_TO_PATH"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="${termApplicationId}${applicationIdSuffix}.broadcast.PREPEND_TO_PATH"/>
+                <action android:name="${termApplicationId}.broadcast.PREPEND_TO_PATH"/>
             </intent-filter>
         </receiver>
 

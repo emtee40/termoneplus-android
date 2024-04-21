@@ -268,10 +268,10 @@
             <data android:scheme="mailto"/>
         </intent>
 
-        <package android:name="com.termoneplus.securebox${applicationIdSuffix}">
+        <package android:name="com.termoneplus.securebox">
             <!-- command provider -->
         </package>
-        <package android:name="com.termoneplus.sample.addon${applicationIdSuffix}">
+        <package android:name="com.termoneplus.sample.addon">
             <!-- command provider -->
         </package>
     </queries>

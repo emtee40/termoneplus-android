@@ -18,8 +18,6 @@ android {
         versionCode 500
         versionName '5.0.0'
 
-        manifestPlaceholders.applicationIdSuffix = ""
-        buildConfigField("String", "APPLICATION_ID_SUFFIX", "\"\"")
         externalNativeBuild {
             cmake {
                 arguments "-DAPPLICATION_ID:STRING=${applicationId}"
@@ -63,20 +61,6 @@ android {
         android.buildTypes.release.signingConfig = signingConfigs.release
     }
     buildTypes {
-        debug {
-            defaultConfig {
-                applicationIdSuffix ".devel"
-
-                // NOTE: used in third party development applications
-                manifestPlaceholders.applicationIdSuffix = "${applicationIdSuffix}"
-                buildConfigField("String", "APPLICATION_ID_SUFFIX", "\"${applicationIdSuffix}\"")
-                externalNativeBuild {
-                    cmake {
-                        arguments "-DAPPLICATION_ID:STRING=${applicationId}${applicationIdSuffix}"
-                    }
-                }
-            }
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
