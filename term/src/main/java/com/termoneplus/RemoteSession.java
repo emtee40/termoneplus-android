@@ -29,14 +29,16 @@ public class RemoteSession extends RemoteInterface {
     protected void processAction(@NonNull Intent intent, @NonNull String action) {
         if (!Application.ACTION_OPEN_NEW_WINDOW.equals(action)) return;
 
-        switchWindow(intent);
+        // Note target window is returned by startSession Terminal interface.
+        String handle = intent.getStringExtra(Application.ARGUMENT_TARGET_WINDOW);
+        if (handle == null)
+            // Note RemoteInterface is also responsible to open new window.
+            super.processAction(intent, action);
+
+        switchWindow(handle);
     }
 
-    private void switchWindow(@NonNull Intent intent) {
-        String handle = intent.getStringExtra(Application.ARGUMENT_TARGET_WINDOW);
-        // Note target window is returned by startSession() call.
-        if (handle == null) return;
-
+    private void switchWindow(@NonNull String handle) {
         TermService service = getTermService();
         if (service == null) return; // just in case
 
