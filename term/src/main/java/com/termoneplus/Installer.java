@@ -93,7 +93,7 @@ public class Installer {
         shell_script.add("EOF");
 
         if (!TextUtils.isEmpty(APPEXEC_COMMAND)) {
-            shell_script.add("cmdexec() {");
+            shell_script.add("t1pcmd() {");
             shell_script.add(APPEXEC_COMMAND + " " + android.os.Process.myUid() + " ${1+\"$@\"}");
             shell_script.add("}");
         }

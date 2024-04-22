@@ -144,7 +144,7 @@ public class CommandCollector {
         }
 
         for (String cmd : list.keySet()) {
-            out.println("alias " + cmd + "='cmdexec " + cmd + "'");
+            out.println("alias " + cmd + "='t1pcmd " + cmd + "'");
         }
         out.flush();
     }
