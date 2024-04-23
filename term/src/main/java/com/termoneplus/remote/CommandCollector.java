@@ -16,7 +16,7 @@
 
 package com.termoneplus.remote;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 
@@ -149,18 +149,18 @@ public class CommandCollector {
         out.flush();
     }
 
-    public void start(Context context) {
+    public void start(Activity activity) {
         pending = TrustedApplications.list.size();
-        new Thread(() -> {
+        activity.runOnUiThread(() -> {
             for (String app : TrustedApplications.list.keySet()) {
                 ICommand remote = TrustedApplications.getRemote(app);
                 if (remote == null) {
-                    boolean flag = TrustedApplications.bind(context, app, this::onApplicationConnectionNotification);
+                    boolean flag = TrustedApplications.bind(activity, app, this::onApplicationConnectionNotification);
                     if (flag) continue;
                 }
                 onApplicationConnectionNotification();
             }
-        }).start();
+        });
     }
 
     public void setOnCommandsConnectedListener(OnCommandsConnectedListener listener) {
