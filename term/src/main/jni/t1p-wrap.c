@@ -24,6 +24,8 @@ extern char *__progname;
 
 extern int appcmd_open(const char *path, int flags, mode_t mode);
 
+extern FILE *appcmd_fopen(const char *path, const char *mode);
+
 
 /* open application configuration
  * - request
@@ -81,4 +83,20 @@ appcmd_open(const char *path, int flags, mode_t mode) {
     err:
     errno = ENOSYS;
     return -1;
+}
+
+FILE *
+appcmd_fopen(const char *path, const char *mode) {
+    char *s;
+
+    if (strcmp(mode, "r") != 0) goto err;
+
+    s = strstr(path, "/etc/");
+    if (s == NULL) goto err;
+
+    return fdopen(open_sysconfig(__progname, s), mode);
+
+    err:
+    errno = ENOSYS;
+    return NULL;
 }
