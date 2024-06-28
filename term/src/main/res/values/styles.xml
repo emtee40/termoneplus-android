@@ -43,7 +43,7 @@
     </style>
 
     <!-- "TermOne Plus" "DayNight" theme(system) -->
-    <style name="BaseAppTheme.DayNight" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="BaseAppTheme.DayNight" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">#607D8B</item><!--Blue Gray 50, 500-->
         <item name="colorPrimaryDark">#455A64</item><!--Blue Gray 50, 700-->
         <item name="colorAccent">#8BC34A</item><!--Light Green 50, 500-->
