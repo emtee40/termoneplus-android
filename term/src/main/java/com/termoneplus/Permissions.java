@@ -82,10 +82,15 @@ public class Permissions {
 
     public static void requestExternalStorage(AppCompatActivity activity, View view, int requestCode) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R /*API Level 30*/) {
-            if (PermissionManageExternal.request(activity))
+            if (PermissionManageExternal.active) {
+                PermissionManageExternal.request(activity, view, requestCode);
                 return;
+            }
         }
-        // We must request at least one permission!
+        requestExternalStoragePermissions(activity, view, requestCode);
+    }
+
+    public static void requestExternalStoragePermissions(AppCompatActivity activity, View view, int requestCode) {
         if (external_storage_permissions.length == 0) return;
         if (shouldShowExternalStorageRationale(activity))
             Snackbar.make(view,

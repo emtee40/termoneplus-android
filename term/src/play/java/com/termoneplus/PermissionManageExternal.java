@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2021-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,22 @@
 
 package com.termoneplus;
 
+import android.view.View;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 @RequiresApi(30)
 public class PermissionManageExternal {
+    public static final boolean active = false;
+
     @SuppressWarnings("SameReturnValue")
     public static boolean isGranted() {
         return false;
     }
 
-    @SuppressWarnings({"SameReturnValue"})
-    public static boolean request(@SuppressWarnings("unused") AppCompatActivity activity) {
-        return false;
+    @SuppressWarnings({"unused", "EmptyMethod"})
+    public static void request(AppCompatActivity activity, View view, int requestCode) {
     }
 }
