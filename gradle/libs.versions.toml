@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.1"
+agp = "8.5.2"
 # library versions
 #appcompat = "1.7.0" #appcompat-resources:1.7.0 requires minSdkVersion 21
 appcompat = "1.6.1"
