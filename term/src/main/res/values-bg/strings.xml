@@ -59,9 +59,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="navigation_drawer_open">Отваряне на чекмеджето за управлерение</string>
     <string name="navigation_drawer_close">Затвяране на чекмеджето за управлерение</string>
 
+    <!-- access "external storage" -->
     <string name="message_external_storage_rationale">Достъпът до \"външен носител\" е необходим за управление на файловете му</string>
     <string name="message_external_storage_granted">Получен достъп до \"външен носител\"</string>
     <string name="message_external_storage_not_granted">Отказан достъп до \"външен носител\"</string>
+
+    <string name="message_all_files_access_rationale">Искане за разрешение \"Достъп до всички файлове\", за да се управлява всичко в дървото от директории на \"външния носител\"</string>
 
     <string name="edit_text">Редактиране на текст</string>
 

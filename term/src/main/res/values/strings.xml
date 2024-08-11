@@ -46,9 +46,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- access "external storage" -->
     <string name="message_external_storage_rationale">Access to \"External Storage\" is required to manage its files</string>
     <string name="message_external_storage_granted">Granted access to \"External Storage\"</string>
     <string name="message_external_storage_not_granted">Denied access to \"External Storage\"</string>
+
+    <string name="message_all_files_access_rationale">Request permission \"All files access\" to manage all in \"External Storage\" directory tree</string>
 
     <!-- Context menu -->
     <string name="edit_text">Edit text</string>

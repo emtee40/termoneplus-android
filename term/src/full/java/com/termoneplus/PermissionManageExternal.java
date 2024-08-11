@@ -16,13 +16,21 @@
 
 package com.termoneplus;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
+import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 
 @RequiresApi(30)
@@ -33,17 +41,37 @@ public class PermissionManageExternal {
      * - https://developer.android.com/training/data-storage/manage-all-files
      * Remark: Looks like there is no way native file management to pass Google policy!
      */
+    private static final String PREF_FILE = "file_access";
+    private static final String KEY_REQUEST_STATUS = "request_status";
 
     public static boolean isGranted() {
         return Environment.isExternalStorageManager();
     }
 
-    public static void request(AppCompatActivity activity, View ignoredView, int ignoredRequestCode) {
+    public static void request(AppCompatActivity activity, View termView, int requestCode) {
+        if (getRequestStatus(activity) != Status.UNDEFINED) return;
+
+        View view = LayoutInflater.from(activity)
+                .inflate(R.layout.dialog_access_all_files, null);
+
+        new AlertDialog.Builder(activity)
+                .setView(view)
+                .setPositiveButton(android.R.string.yes, (dialog, which) ->
+                        startRequest(activity, termView, requestCode))
+                .setNegativeButton(android.R.string.no, (dialog, which) ->
+                        legacyRequest(activity, termView, requestCode))
+                .setOnDismissListener(dialog ->
+                        legacyRequest(activity, termView, requestCode))
+                .show();
+    }
+
+    private static void startRequest(AppCompatActivity activity, View ignoredView, int ignoredRequestCode) {
         try {
             Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
             Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
             // startActivityForResult does not work here
             activity.startActivity(intent);
+            setRequestStatus(activity, Status.REQUESTED);
             return;
         } catch (Exception ignore) {
         }
@@ -51,7 +79,39 @@ public class PermissionManageExternal {
             Intent intent = new Intent();
             intent.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
             activity.startActivity(intent);
+            setRequestStatus(activity, Status.REQUESTED);
+            return;
         } catch (Exception ignore) {
         }
+        setRequestStatus(activity, Status.FAILED);
+    }
+
+    private static void legacyRequest(AppCompatActivity activity, View view, int requestCode) {
+        setRequestStatus(activity, Status.REJECTED);
+        Permissions.requestExternalStoragePermissions(activity, view, requestCode);
+    }
+
+
+    @Status
+    private static int getRequestStatus(AppCompatActivity activity) {
+        SharedPreferences pref = activity.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+        return pref.getInt(KEY_REQUEST_STATUS, Status.UNDEFINED);
+    }
+
+    private static void setRequestStatus(AppCompatActivity activity, @Status int code) {
+        SharedPreferences pref = activity.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(KEY_REQUEST_STATUS, code);
+        editor.apply();
+    }
+
+
+    @IntDef({Status.UNDEFINED, Status.REQUESTED, Status.REJECTED, Status.FAILED})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Status {
+        int UNDEFINED = 0;
+        int REQUESTED = 1;
+        int REJECTED = 2;
+        int FAILED = 99;
     }
 }

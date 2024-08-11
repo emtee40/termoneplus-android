@@ -43,6 +43,7 @@
     <string name="navigation_drawer_open">Otwórz panel nawigacji</string>
     <string name="navigation_drawer_close">Zamknij panel nawigacji</string>
 
+    <!-- access "external storage" -->
     <string name="message_external_storage_rationale">Dostęp do \"pamięci zewnętrznej\" jest wymagany do zarządzania plikami</string>
     <string name="message_external_storage_granted">Dostęp przyznany do \"pamięci zewnętrznej\"</string>
     <string name="message_external_storage_not_granted">Odmowa dostępu do \"pamięci zewnętrznej\"</string>

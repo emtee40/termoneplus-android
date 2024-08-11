@@ -75,6 +75,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="navigation_drawer_open">Navigationsleiste öffnen</string>
     <string name="navigation_drawer_close">Navigationsleiste schließen</string>
 
+    <!-- access "external storage" -->
     <string name="message_external_storage_rationale">Zugriff auf Dateien im externen Speicher ist nicht erlaubt</string>
     <string name="message_external_storage_granted">Zugriff auf den externen Speicher wurde zugelassen</string>
     <string name="message_external_storage_not_granted">Zugriff auf den externen Speicher wurde abgelehnt</string>
