@@ -32,6 +32,8 @@ target_compile_options(
         libexec-t1plus.so
         PRIVATE
         -fPIC
+        # build without fortify, compatibility with SDK < 17!
+        -U_FORTIFY_SOURCE
 )
 target_link_libraries(
         libexec-t1plus.so
@@ -53,6 +55,8 @@ target_compile_options(
         libcmd-t1plus.so
         PRIVATE
         -fPIC
+        # build without fortify, compatibility with SDK < 17!
+        -U_FORTIFY_SOURCE
 )
 target_link_libraries(
         libcmd-t1plus.so
@@ -70,6 +74,12 @@ target_compile_definitions(
         appwrap
         PRIVATE
         PACKAGE_NAME="${APPLICATION_ID}"
+)
+target_compile_options(
+        appwrap
+        PRIVATE
+        # build without fortify, compatibility with SDK < 17!
+        -U_FORTIFY_SOURCE
 )
 target_link_libraries(
         appwrap
@@ -107,6 +117,8 @@ target_compile_definitions(
 target_compile_options(
         libexeo-t1plus.so
         PRIVATE
+        # build without fortify, compatibility with SDK < 17!
+        -U_FORTIFY_SOURCE
 )
 target_link_libraries(
         libexeo-t1plus.so

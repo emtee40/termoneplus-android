@@ -26,6 +26,12 @@ add_library(
         compat.c
         grantpt.c
 )
+target_compile_options(
+        term-system
+        PRIVATE
+        # build without fortify, compatibility with SDK < 17!
+        -U_FORTIFY_SOURCE
+)
 target_link_libraries(
         term-system
         log
