@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 /**
  * A backing store for a TranscriptScreen.
- *
+ * <p>
  * The text is stored as a circular buffer of rows.  There are two types of
  * row:
  * - "basic", which is a char[] array used to store lines which consist
@@ -37,9 +37,9 @@ import java.util.Arrays;
  *   store a line containing any valid Unicode sequence.  An array of short[]
  *   is used to store the "offset" at which each column starts; for example,
  *   if column 20 starts at index 23 in the array, then mOffset[20] = 3.
- *
+ * <p>
  * Style information is stored in a separate circular buffer of StyleRows.
- *
+ * <p>
  * Rows are allocated on demand, when a character is first stored into them.
  * A "basic" row is allocated unless the store which triggers the allocation
  * requires a "full" row.  "Basic" rows are converted to "full" rows when
@@ -210,8 +210,6 @@ class UnicodeTranscript {
                     --shift;
                     if (shift == 0) {
                         break;
-                    } else {
-                        continue;
                     }
                 } else {
                     // Line not blank -- we keep it and everything above
@@ -348,8 +346,6 @@ class UnicodeTranscript {
         }
 
         blankBottomMargin(bottomMargin, style);
-
-        return;
     }
 
     /**
@@ -398,7 +394,6 @@ class UnicodeTranscript {
                         }
                         if (Character.isHighSurrogate(aTmp)) {
                             cHigh = aTmp;
-                            continue;
                         } else if (Character.isLowSurrogate(aTmp)) {
                             int codePoint = Character.toCodePoint(cHigh, aTmp);
                             setChar(dx + x, extDstRow, codePoint);
@@ -436,7 +431,6 @@ class UnicodeTranscript {
                         }
                         if (Character.isHighSurrogate(aTmp)) {
                             cHigh = aTmp;
-                            continue;
                         } else if (Character.isLowSurrogate(aTmp)) {
                             int codePoint = Character.toCodePoint(cHigh, aTmp);
                             setChar(dx + x, extDstRow, codePoint);
@@ -480,7 +474,7 @@ class UnicodeTranscript {
     /**
      * Minimum API version for which we're willing to let Android try
      * rendering conjoining Hangul jamo as composed syllable blocks.
-     *
+     * <p>
      * This appears to work on Android 4.1.2, 4.3, and 4.4 (real devices only;
      * the emulator's broken for some reason), but not on 4.0.4 -- hence the
      * choice of API 16 as the minimum.
@@ -489,11 +483,11 @@ class UnicodeTranscript {
 
     /**
      * Gives the display width of the code point in a monospace font.
-     *
+     * <p>
      * Nonspacing combining marks, format characters, and control characters
      * have display width zero.  East Asian fullwidth and wide characters
      * have display width two.  All other characters have display width one.
-     *
+     * <p>
      * Known issues:
      * - Proper support for East Asian wide characters requires API >= 8.
      * - Assigning all East Asian "ambiguous" characters a width of 1 may not
@@ -588,7 +582,7 @@ class UnicodeTranscript {
 
     /**
      * Get the contents of a line (or part of a line) of the transcript.
-     *
+     * <p>
      * The char[] array returned may be part of the internal representation
      * of the line -- make a copy first if you want to modify it.  The returned
      * array may be longer than the requested portion of the transcript; in
