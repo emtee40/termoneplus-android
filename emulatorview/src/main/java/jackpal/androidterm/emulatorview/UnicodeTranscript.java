@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Steven Luo
- * Copyright (C) 2018-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -764,29 +764,6 @@ class UnicodeTranscript {
         return !(charWidth(codePoint) != 1 || CharacterCompat.charCount(codePoint) != 1);
     }
 
-    private char[] allocateBasicLine(int row, int columns) {
-        char[] line = new char[columns];
-
-        // Fill the line with blanks
-        Arrays.fill(line, ' ');
-
-        mLines[row] = line;
-        if (mColor[row] == null) {
-            mColor[row] = new StyleRow(0, columns);
-        }
-        return line;
-    }
-
-    private FullUnicodeLine allocateFullLine(int row, int columns) {
-        FullUnicodeLine line = new FullUnicodeLine(columns);
-
-        mLines[row] = line;
-        if (mColor[row] == null) {
-            mColor[row] = new StyleRow(0, columns);
-        }
-        return line;
-    }
-
     private void blankBottomMargin(int bottomMargin, int style) {
         int row = externalToInternalRow(bottomMargin - 1);
 
@@ -818,35 +795,27 @@ class UnicodeTranscript {
         }
         row = externalToInternalRow(row);
 
-        /*
-         * Whether data contains non-BMP or characters with charWidth != 1
-         * 0 - false; 1 - true; -1 - undetermined
-         */
-        int basicMode = -1;
+        // Whether data contains non-BMP or characters with charWidth != 1
+        boolean basicMode = isBasicChar(codePoint);
 
         // Allocate a row on demand
         if (mLines[row] == null) {
-            if (isBasicChar(codePoint)) {
-                allocateBasicLine(row, mColumns);
-                basicMode = 1;
+            if (basicMode) {
+                char[] line = new char[mColumns];
+                // Fill the line with blanks
+                Arrays.fill(line, ' ');
+                mLines[row] = line;
             } else {
-                allocateFullLine(row, mColumns);
-                basicMode = 0;
+                mLines[row] = new FullUnicodeLine(mColumns);
             }
+            // Use style from preferences as default
+            mColor[row] = new StyleRow(mDefaultStyle, mColumns);
         }
 
         if (mLines[row] instanceof char[]) {
             char[] line = (char[]) mLines[row];
 
-            if (basicMode == -1) {
-                if (isBasicChar(codePoint)) {
-                    basicMode = 1;
-                } else {
-                    basicMode = 0;
-                }
-            }
-
-            if (basicMode == 1) {
+            if (basicMode) {
                 // Fast path -- just put the char in the array
                 line[column] = (char) codePoint;
                 return true;
