@@ -457,6 +457,43 @@ class UnicodeTranscript {
         blankBottomMargin(bottomMargin, style);
     }
 
+    private void copyRow(int sx, int sy,  int w, int dx, int dy, int y, Object[] lines, StyleRow[] color) {
+        int srcRow = externalToInternalRow(sy + y);
+        int dstRow = externalToInternalRow(dy + y);
+        if (lines[srcRow] instanceof char[] && lines[dstRow] instanceof char[]) {
+            System.arraycopy(lines[srcRow], sx, lines[dstRow], dx, w);
+            return;
+        }
+
+        // XXX There has to be a faster way to do this ...
+        int extDstRow = dy + y;
+        char[] tmp = getLine(sy + y, sx, sx + w, true);
+        if (tmp == null) {
+            // Source line was blank
+            blockSet(dx, extDstRow, w, 1, ' ', mDefaultStyle);
+            return;
+        }
+
+        char cHigh = 0;
+        int x = 0;
+        for (char aTmp : tmp) {
+            if (aTmp == 0 || dx + x >= mColumns) {
+                break;
+            }
+            if (Character.isHighSurrogate(aTmp)) {
+                cHigh = aTmp;
+            } else if (Character.isLowSurrogate(aTmp)) {
+                int codePoint = Character.toCodePoint(cHigh, aTmp);
+                setChar(dx + x, extDstRow, codePoint);
+                x += charWidth(codePoint);
+            } else {
+                setChar(dx + x, extDstRow, aTmp);
+                x += charWidth(aTmp);
+            }
+        }
+        color[srcRow].copy(sx, color[dstRow], dx, w);
+    }
+
     /**
      * Block copy characters from one position in the screen to another. The two
      * positions can overlap. All characters of the source and destination must
@@ -481,76 +518,12 @@ class UnicodeTranscript {
         if (sy > dy) {
             // Move in increasing order
             for (int y = 0; y < h; y++) {
-                int srcRow = externalToInternalRow(sy + y);
-                int dstRow = externalToInternalRow(dy + y);
-                if (lines[srcRow] instanceof char[] && lines[dstRow] instanceof char[]) {
-                    System.arraycopy(lines[srcRow], sx, lines[dstRow], dx, w);
-                } else {
-                    // XXX There has to be a faster way to do this ...
-                    int extDstRow = dy + y;
-                    char[] tmp = getLine(sy + y, sx, sx + w, true);
-                    if (tmp == null) {
-                        // Source line was blank
-                        blockSet(dx, extDstRow, w, 1, ' ', mDefaultStyle);
-                        continue;
-                    }
-                    char cHigh = 0;
-                    int x = 0;
-                    int columns = mColumns;
-                    for (char aTmp : tmp) {
-                        if (aTmp == 0 || dx + x >= columns) {
-                            break;
-                        }
-                        if (Character.isHighSurrogate(aTmp)) {
-                            cHigh = aTmp;
-                        } else if (Character.isLowSurrogate(aTmp)) {
-                            int codePoint = Character.toCodePoint(cHigh, aTmp);
-                            setChar(dx + x, extDstRow, codePoint);
-                            x += charWidth(codePoint);
-                        } else {
-                            setChar(dx + x, extDstRow, aTmp);
-                            x += charWidth(aTmp);
-                        }
-                    }
-                }
-                color[srcRow].copy(sx, color[dstRow], dx, w);
+                copyRow(sx, sy,  w, dx, dy, y, lines, color);
             }
         } else {
             // Move in decreasing order
             for (int y = 0; y < h; y++) {
-                int y2 = h - (y + 1);
-                int srcRow = externalToInternalRow(sy + y2);
-                int dstRow = externalToInternalRow(dy + y2);
-                if (lines[srcRow] instanceof char[] && lines[dstRow] instanceof char[]) {
-                    System.arraycopy(lines[srcRow], sx, lines[dstRow], dx, w);
-                } else {
-                    int extDstRow = dy + y2;
-                    char[] tmp = getLine(sy + y2, sx, sx + w, true);
-                    if (tmp == null) {
-                        // Source line was blank
-                        blockSet(dx, extDstRow, w, 1, ' ', mDefaultStyle);
-                        continue;
-                    }
-                    char cHigh = 0;
-                    int x = 0;
-                    int columns = mColumns;
-                    for (char aTmp : tmp) {
-                        if (aTmp == 0 || dx + x >= columns) {
-                            break;
-                        }
-                        if (Character.isHighSurrogate(aTmp)) {
-                            cHigh = aTmp;
-                        } else if (Character.isLowSurrogate(aTmp)) {
-                            int codePoint = Character.toCodePoint(cHigh, aTmp);
-                            setChar(dx + x, extDstRow, codePoint);
-                            x += charWidth(codePoint);
-                        } else {
-                            setChar(dx + x, extDstRow, aTmp);
-                            x += charWidth(aTmp);
-                        }
-                    }
-                }
-                color[srcRow].copy(sx, color[dstRow], dx, w);
+                copyRow(sx, sy,  w, dx, dy, h - (y + 1), lines, color);
             }
         }
     }
