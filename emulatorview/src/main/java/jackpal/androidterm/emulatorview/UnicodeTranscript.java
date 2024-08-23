@@ -49,29 +49,29 @@ import java.util.Arrays;
 class UnicodeTranscript {
     private static final String TAG = "UnicodeTranscript";
 
-    private Object[] mLines;
-    private StyleRow[] mColor;
-    private boolean[] mLineWrap;
-    private int mTotalRows;
+    private final int mColumns;
+    private final int mTotalRows;
+    private final Object[] mLines;
+    private final StyleRow[] mColor;
+    private final boolean[] mLineWrap;
+    private final StyleRow tmpColor;
+
     private int mScreenRows;
-    private int mColumns;
     private int mActiveTranscriptRows = 0;
+    private int mScreenFirstRow = 0;
     private int mDefaultStyle;
 
-    private int mScreenFirstRow = 0;
-
     private char[] tmpLine;
-    private StyleRow tmpColor;
 
     public UnicodeTranscript(int columns, int totalRows, int screenRows, int defaultStyle) {
         mColumns = columns;
         mTotalRows = totalRows;
-        mScreenRows = screenRows;
         mLines = new Object[totalRows];
         mColor = new StyleRow[totalRows];
         mLineWrap = new boolean[totalRows];
         tmpColor = new StyleRow(defaultStyle, mColumns);
 
+        mScreenRows = screenRows;
         mDefaultStyle = defaultStyle;
     }
 
