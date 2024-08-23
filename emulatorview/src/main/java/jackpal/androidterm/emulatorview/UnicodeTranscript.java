@@ -49,6 +49,16 @@ import java.util.Arrays;
 class UnicodeTranscript {
     private static final String TAG = "UnicodeTranscript";
 
+    /**
+     * Minimum API version for which we're willing to let Android try
+     * rendering conjoining Hangul jamo as composed syllable blocks.
+     * <p>
+     * This appears to work on Android 4.1.2, 4.3, and 4.4 (real devices only;
+     * the emulator's broken for some reason), but not on 4.0.4 -- hence the
+     * choice of API 16 as the minimum.
+     */
+    private static final int HANGUL_CONJOINING_MIN_SDK = 16;
+
     private final int mColumns;
     private final int mTotalRows;
     private final Object[] mLines;
@@ -73,6 +83,105 @@ class UnicodeTranscript {
 
         mScreenRows = screenRows;
         mDefaultStyle = defaultStyle;
+    }
+
+    /**
+     * Gives the display width of the code point in a monospace font.
+     * <p>
+     * Nonspacing combining marks, format characters, and control characters
+     * have display width zero.  East Asian fullwidth and wide characters
+     * have display width two.  All other characters have display width one.
+     * <p>
+     * Known issues:
+     * - Proper support for East Asian wide characters requires API >= 8.
+     * - Assigning all East Asian "ambiguous" characters a width of 1 may not
+     *   be correct if Android renders those characters as wide in East Asian
+     *   context (as the Unicode standard permits).
+     * - Isolated Hangul conjoining medial vowels and final consonants are
+     *   treated as combining characters (they should only be combining when
+     *   part of a Korean syllable block).
+     *
+     * @param codePoint A Unicode code point.
+     * @return The display width of the Unicode code point.
+     */
+    public static int charWidth(int codePoint) {
+        // Early out for ASCII printable characters
+        if (codePoint > 31 && codePoint < 127) {
+            return 1;
+        }
+
+        /* HACK: We're using ASCII ESC to save the location of the cursor
+           across screen resizes, so we need to pretend that it has width 1 */
+        if (codePoint == 27) {
+            return 1;
+        }
+
+        switch (Character.getType(codePoint)) {
+        case Character.CONTROL:
+        case Character.FORMAT:
+        case Character.NON_SPACING_MARK:
+        case Character.ENCLOSING_MARK:
+            return 0;
+        }
+
+        if ((codePoint >= 0x1160 && codePoint <= 0x11FF) ||
+            (codePoint >= 0xD7B0 && codePoint <= 0xD7FF)) {
+            if (Build.VERSION.SDK_INT >= HANGUL_CONJOINING_MIN_SDK) {
+                /* Treat Hangul jamo medial vowels and final consonants as
+                 * combining characters with width 0 to make jamo composition
+                 * work correctly.
+                 *
+                 * XXX: This is wrong for medials/finals outside a Korean
+                 * syllable block, but there's no easy solution to that
+                 * problem, and we may as well at least get the common case
+                 * right. */
+                return 0;
+            } else {
+                /* Older versions of Android didn't compose Hangul jamo, but
+                 * instead rendered them as individual East Asian wide
+                 * characters (despite Unicode defining medial vowels and final
+                 * consonants as East Asian neutral/narrow).  Treat them as
+                 * width 2 characters to match the rendering. */
+                return 2;
+            }
+        }
+        if (CharacterCompat.charCount(codePoint) == 1) {
+            if (CharacterCompat.isEastAsianDoubleWidth(codePoint)) {
+                return 2;
+            }
+        } else {
+            // Outside the BMP, ideographic planes contain wide chars
+            switch ((codePoint >> 16) & 0xf) {
+            case 2: // Supplementary Ideographic Plane
+            case 3: // Tertiary Ideographic Plane
+                return 2;
+            case 1: // Supplementary Multilingual Plane
+                return 2; // TODO
+            }
+        }
+
+        return 1;
+    }
+
+    public static int charWidth(char cHigh, char cLow) {
+        return charWidth(Character.toCodePoint(cHigh, cLow));
+    }
+
+    /**
+     * Gives the display width of a code point in a char array
+     * in a monospace font.
+     *
+     * @param chars The array containing the code point in question.
+     * @param index The index into the array at which the code point starts.
+     * @return The display width of the Unicode code point.
+     */
+    public static int charWidth(char[] chars, int index) {
+        char c = chars[index];
+        if (Character.isHighSurrogate(c)) {
+            return charWidth(c, chars[index+1]);
+        } else {
+            return charWidth(c);
+        }
     }
 
     public void setDefaultStyle(int defaultStyle) {
@@ -468,115 +577,6 @@ class UnicodeTranscript {
             for (int x = 0; x < w; x++) {
                 setChar(sx + x, sy + y, val, style);
             }
-        }
-    }
-
-    /**
-     * Minimum API version for which we're willing to let Android try
-     * rendering conjoining Hangul jamo as composed syllable blocks.
-     * <p>
-     * This appears to work on Android 4.1.2, 4.3, and 4.4 (real devices only;
-     * the emulator's broken for some reason), but not on 4.0.4 -- hence the
-     * choice of API 16 as the minimum.
-     */
-    static final int HANGUL_CONJOINING_MIN_SDK = 16;
-
-    /**
-     * Gives the display width of the code point in a monospace font.
-     * <p>
-     * Nonspacing combining marks, format characters, and control characters
-     * have display width zero.  East Asian fullwidth and wide characters
-     * have display width two.  All other characters have display width one.
-     * <p>
-     * Known issues:
-     * - Proper support for East Asian wide characters requires API >= 8.
-     * - Assigning all East Asian "ambiguous" characters a width of 1 may not
-     *   be correct if Android renders those characters as wide in East Asian
-     *   context (as the Unicode standard permits).
-     * - Isolated Hangul conjoining medial vowels and final consonants are
-     *   treated as combining characters (they should only be combining when
-     *   part of a Korean syllable block).
-     *
-     * @param codePoint A Unicode code point.
-     * @return The display width of the Unicode code point.
-     */
-    public static int charWidth(int codePoint) {
-        // Early out for ASCII printable characters
-        if (codePoint > 31 && codePoint < 127) {
-            return 1;
-        }
-
-        /* HACK: We're using ASCII ESC to save the location of the cursor
-           across screen resizes, so we need to pretend that it has width 1 */
-        if (codePoint == 27) {
-            return 1;
-        }
-
-        switch (Character.getType(codePoint)) {
-        case Character.CONTROL:
-        case Character.FORMAT:
-        case Character.NON_SPACING_MARK:
-        case Character.ENCLOSING_MARK:
-            return 0;
-        }
-
-        if ((codePoint >= 0x1160 && codePoint <= 0x11FF) ||
-            (codePoint >= 0xD7B0 && codePoint <= 0xD7FF)) {
-            if (Build.VERSION.SDK_INT >= HANGUL_CONJOINING_MIN_SDK) {
-                /* Treat Hangul jamo medial vowels and final consonants as
-                 * combining characters with width 0 to make jamo composition
-                 * work correctly.
-                 *
-                 * XXX: This is wrong for medials/finals outside a Korean
-                 * syllable block, but there's no easy solution to that
-                 * problem, and we may as well at least get the common case
-                 * right. */
-                return 0;
-            } else {
-                /* Older versions of Android didn't compose Hangul jamo, but
-                 * instead rendered them as individual East Asian wide
-                 * characters (despite Unicode defining medial vowels and final
-                 * consonants as East Asian neutral/narrow).  Treat them as
-                 * width 2 characters to match the rendering. */
-                return 2;
-            }
-        }
-        if (CharacterCompat.charCount(codePoint) == 1) {
-            if (CharacterCompat.isEastAsianDoubleWidth(codePoint)) {
-                return 2;
-            }
-        } else {
-            // Outside the BMP, ideographic planes contain wide chars
-            switch ((codePoint >> 16) & 0xf) {
-            case 2: // Supplementary Ideographic Plane
-            case 3: // Tertiary Ideographic Plane
-                return 2;
-            case 1: // Supplementary Multilingual Plane
-                return 2; // TODO
-            }
-        }
-
-        return 1;
-    }
-
-    public static int charWidth(char cHigh, char cLow) {
-        return charWidth(Character.toCodePoint(cHigh, cLow));
-    }
-
-    /**
-     * Gives the display width of a code point in a char array
-     * in a monospace font.
-     *
-     * @param chars The array containing the code point in question.
-     * @param index The index into the array at which the code point starts.
-     * @return The display width of the Unicode code point.
-     */
-    public static int charWidth(char[] chars, int index) {
-        char c = chars[index];
-        if (Character.isHighSurrogate(c)) {
-            return charWidth(c, chars[index+1]);
-        } else {
-            return charWidth(c);
         }
     }
 
@@ -1044,7 +1044,7 @@ class FullUnicodeLine {
 
             ++shift;
         }
-        
+
         /*
          * Handle cases where we need to clobber the contents of the next
          * column in order to preserve column alignment
