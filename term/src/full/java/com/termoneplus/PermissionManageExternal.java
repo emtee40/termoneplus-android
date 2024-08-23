@@ -56,9 +56,9 @@ public class PermissionManageExternal {
 
         new AlertDialog.Builder(activity)
                 .setView(view)
-                .setPositiveButton(android.R.string.yes, (dialog, which) ->
+                .setPositiveButton(android.R.string.ok, (dialog, which) ->
                         startRequest(activity, termView, requestCode))
-                .setNegativeButton(android.R.string.no, (dialog, which) ->
+                .setNegativeButton(android.R.string.cancel, (dialog, which) ->
                         legacyRequest(activity, termView, requestCode))
                 .setOnDismissListener(dialog ->
                         legacyRequest(activity, termView, requestCode))
