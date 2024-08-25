@@ -81,9 +81,8 @@ public class RemoteActionActivity extends AppCompatActivity {
             view.setAlpha(1.0f);
         }
         {
-            // TODO: Note path collection is deprecated.
             TextView msg = findViewById(R.id.progress_message);
-            msg.setText(R.string.path_collection_progress);
+            msg.setText(R.string.app_collection_progress);
         }
 
         // start path collection

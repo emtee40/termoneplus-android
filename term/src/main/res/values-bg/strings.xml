@@ -54,6 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="disable_wifilock">Освобождаване на безжичната мрежа</string>
 
     <string name="path_collection_progress">събиране на пътища от други приложения …</string>
+    <string name="app_collection_progress">събиране на сведения от други приложения …</string>
 
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open">Отваряне на чекмеджето за управлерение</string>

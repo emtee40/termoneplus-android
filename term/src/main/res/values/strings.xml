@@ -41,6 +41,7 @@
     <string name="disable_wifilock">Drop WifiLock</string>
 
     <string name="path_collection_progress">collecting paths from other applications …</string>
+    <string name="app_collection_progress">collecting information from other applications …</string>
 
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
