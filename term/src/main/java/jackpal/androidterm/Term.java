@@ -280,8 +280,6 @@ public class Term extends AppCompatActivity
 
         TSIntent = TermService.start(this);
 
-        Context app = getApplicationContext();
-
         WakeLock.create(this);
         WifiLock.create(this);
 
@@ -494,7 +492,7 @@ public class Term extends AppCompatActivity
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         mHaveFullHwKeyboard = checkHaveFullHwKeyboard(newConfig);
@@ -652,7 +650,9 @@ public class Term extends AppCompatActivity
             return;
         }
 
-        if (!Application.ID.equals(intent.getComponent().getPackageName())) {
+        ComponentName component = intent.getComponent();
+        if (component == null ||
+                !Application.ID.equals(component.getPackageName())) {
             /* not from application */
             return;
         }
@@ -1007,7 +1007,7 @@ public class Term extends AppCompatActivity
         }
 
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
+        public boolean onSingleTapUp(@NonNull MotionEvent e) {
             // Let the EmulatorView handle taps if mouse tracking is active
             if (view.isMouseTrackingActive()) return false;
 
@@ -1021,7 +1021,7 @@ public class Term extends AppCompatActivity
         }
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
             float absVelocityX = Math.abs(velocityX);
             float absVelocityY = Math.abs(velocityY);
             if (absVelocityX > Math.max(1000.0f, 2.0 * absVelocityY)) {
