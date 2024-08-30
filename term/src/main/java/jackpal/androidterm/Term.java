@@ -914,8 +914,10 @@ public class Term extends AppCompatActivity
         invalidateOptionsMenu();
     }
 
-    private void doUIToggle(int x, int y, int width, int height) {
-        View view = getCurrentEmulatorView();
+    private void doToggleUI(MotionEvent e, EmulatorView view) {
+        int y = (int) e.getY();
+        int height = view.getVisibleHeight();
+
         switch (mActionBarMode) {
             case TermSettings.ACTION_BAR_MODE_ALWAYS_VISIBLE:
                 if (!mHaveFullHwKeyboard) {
@@ -1013,10 +1015,12 @@ public class Term extends AppCompatActivity
 
             //Check for link at tap location
             String link = view.getURLat(e.getX(), e.getY());
-            if (link != null)
+            if (link != null) {
                 WrapOpenURL.launch(Term.this, link);
-            else
-                doUIToggle((int) e.getX(), (int) e.getY(), view.getVisibleWidth(), view.getVisibleHeight());
+                return true;
+            }
+
+            doToggleUI(e, view);
             return true;
         }
 
