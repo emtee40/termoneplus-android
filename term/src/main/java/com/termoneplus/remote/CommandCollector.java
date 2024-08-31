@@ -103,6 +103,10 @@ public class CommandCollector {
             if (fd == null) return;
 
             FileInputStream in = new FileInputStream(fd);
+            /* start application response with requested file name
+             * as indicator for successful "open" operation
+             */
+            out.write(path.getBytes());
             Stream.copy(in, out);
         } catch (IOException ignore) {
         }

@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+#include <limits.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
+
 #include "appinfo.h"
 
 extern char *__progname;
@@ -27,6 +30,32 @@ extern int appcmd_open(const char *path, int flags, mode_t mode);
 extern FILE *appcmd_fopen(const char *path, const char *mode);
 
 
+/* application response starts with requested file name
+ * as indicator for successful "open" operation
+ */
+static int/*boolean*/
+response_file(const char *path, int sock) {
+    char pathname[PATH_MAX + 1]; /* plus eof */
+    size_t len, res;
+
+    len = strlen(path);
+    if (len >= sizeof(pathname)) goto err;
+
+    memset(&pathname, 0, len);
+    res = atomicio(read, sock, pathname, len);
+    if (res != len) goto err;
+    pathname[res] = '\0';
+
+    if (strcmp(path, pathname) != 0) goto err;
+
+    return 1;
+
+    err:
+    errno = EEXIST;
+    return 0;
+}
+
+
 /* open application configuration
  * - request
  *   open sysconfig
@@ -34,6 +63,7 @@ extern FILE *appcmd_fopen(const char *path, const char *mode);
  *   [sysconfig path]
  *   <eol>
  * - response
+ *   path without end of line
  *   [file content written to socket]
  */
 static int
@@ -60,6 +90,8 @@ open_sysconfig(const char *cmd, const char *path) {
         if (!write_msg(sock, msg))
             goto done;
     }
+
+    if (!response_file(path, sock)) return -1;
 
     ret = sock;
 
