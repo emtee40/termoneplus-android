@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Roumen Petrov.  All rights reserved.
+ * Copyright (C) 2018-2024 Roumen Petrov.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,22 @@
 
 package com.termoneplus;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.termoneplus.utils.ConsoleStartupScript;
-import com.termoneplus.utils.ThemeManager;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+
+import com.termoneplus.utils.ConsoleStartupScript;
+import com.termoneplus.utils.ThemeManager;
+
+import jackpal.androidterm.util.TermSettings;
 
 
 public class TermPreferencesActivity extends AppCompatActivity
@@ -91,17 +95,23 @@ public class TermPreferencesActivity extends AppCompatActivity
             // Load the preferences from an XML resource
             setPreferencesFromResource(R.xml.preferences, rootKey);
 
-            findPreference(getString(R.string.key_fontsource_preference))
-                    .setOnPreferenceClickListener(
+            {
+                Preference pref = findPreference(getString(R.string.key_fontsource_preference));
+                if (pref != null)
+                    pref.setOnPreferenceClickListener(
                             preference -> TypefaceSetting.chose(getActivity()));
+            }
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-            String pref_home_path = getString(R.string.key_home_path_preference);
-            String homedir = prefs.getString(pref_home_path, "");
+            Context context = getContext();
+            if (context != null) {
+                TermSettings settings = new TermSettings(context);
+                String homedir = settings.getHomePath();
 
-            String pref_shellrc = getString(R.string.key_shellrc_preference);
-            ((EditTextPreference) findPreference(pref_shellrc))
-                    .setText(ConsoleStartupScript.read(homedir));
+                String pref_shellrc = getString(R.string.key_shellrc_preference);
+                EditTextPreference pref = findPreference(pref_shellrc);
+                if (pref != null)
+                    pref.setText(ConsoleStartupScript.read(homedir));
+            }
         }
     }
 }
