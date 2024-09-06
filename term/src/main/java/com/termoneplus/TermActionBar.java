@@ -204,9 +204,9 @@ public class TermActionBar {
             Resources.Theme theme = context.getTheme();
             if (theme.resolveAttribute(R.attr.colorPrimaryLight, typedValue, true))
                 colors[0] = typedValue.data;
-            if (theme.resolveAttribute(R.attr.colorPrimary, typedValue, true))
+            if (theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true))
                 colors[1] = typedValue.data;
-            if (theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true))
+            if (theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimaryDark, typedValue, true))
                 colors[2] = typedValue.data;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN /* API Level 16*/)
