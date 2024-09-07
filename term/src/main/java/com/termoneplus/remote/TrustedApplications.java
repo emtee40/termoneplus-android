@@ -26,10 +26,11 @@ import com.termoneplus.BuildConfig;
 import com.termoneplus.v1.ICommand;
 
 import java.util.HashMap;
+import java.util.Set;
 
 
 public class TrustedApplications {
-    public static final HashMap<String, RemoteConnection> list;
+    private static final HashMap<String, RemoteConnection> list;
 
     static {
         list = new HashMap<>();
@@ -40,6 +41,14 @@ public class TrustedApplications {
         list.put("demo", new RemoteConnection(
                 "com.termoneplus.sample.addon" + BuildConfig.APPLICATION_ID_SUFFIX,
                 "com.termoneplus.sample.addon.CommandService"));
+    }
+
+    public static int size() {
+        return list.size();
+    }
+
+    public static Set<String> keySet() {
+        return list.keySet();
     }
 
     public static ICommand getRemote(String key) {

@@ -47,7 +47,7 @@ import java.util.HashMap;
  * and other command attributes.
  */
 public class CommandCollector {
-    public static final HashMap<String, CommandInfo> list = new HashMap<>();
+    private static final HashMap<String, CommandInfo> list = new HashMap<>();
     private int pending = 0;
     private OnCommandsConnectedListener callback;
 
@@ -130,7 +130,7 @@ public class CommandCollector {
     }
 
     public static void printExternalAliases(PrintStream out) {
-        for (String app : TrustedApplications.list.keySet()) {
+        for (String app : TrustedApplications.keySet()) {
             ICommand remote = TrustedApplications.getRemote(app);
             if (remote == null) continue;
 
@@ -156,9 +156,9 @@ public class CommandCollector {
     }
 
     public void start(Context context) {
-        pending = TrustedApplications.list.size();
+        pending = TrustedApplications.size();
         new Handler(Looper.getMainLooper()).post(() -> {
-            for (String app : TrustedApplications.list.keySet()) {
+            for (String app : TrustedApplications.keySet()) {
                 ICommand remote = TrustedApplications.getRemote(app);
                 if (remote == null) {
                     boolean flag = TrustedApplications.bind(context, app,
