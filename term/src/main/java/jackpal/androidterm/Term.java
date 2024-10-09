@@ -60,6 +60,7 @@ import com.termoneplus.WindowListActivity;
 import com.termoneplus.WindowListAdapter;
 import com.termoneplus.compat.SoftInputCompat;
 import com.termoneplus.remote.CommandCollector;
+import com.termoneplus.services.ServiceManager;
 import com.termoneplus.utils.ConsoleStartupScript;
 import com.termoneplus.utils.SimpleClipboardManager;
 import com.termoneplus.utils.WakeLock;
@@ -93,6 +94,8 @@ public class Term extends AppCompatActivity
     protected static final String WINDOW_ACTION_NEW = "internal.NEW_WINDOW";
     protected static final String WINDOW_ACTION_SWITCH = "internal.SWITCH_WINDOW";
 
+    private final ServiceManager service_manager = new ServiceManager();
+
     private final ActivityResultLauncher<Intent> request_choose_window =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -107,7 +110,6 @@ public class Term extends AppCompatActivity
     private TermSettings mSettings;
     private boolean mAlreadyStarted = false;
     private boolean mStopServiceOnFinish = false;
-    private Intent TSIntent;
     private int onResumeSelectWindow = -1;
     private boolean path_collected;
     private boolean command_collected;
@@ -278,7 +280,7 @@ public class Term extends AppCompatActivity
             collector.start(this);
         }
 
-        TSIntent = TermService.start(this);
+        service_manager.onCreate(this);
 
         WakeLock.create(this);
         WifiLock.create(this);
@@ -294,7 +296,7 @@ public class Term extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        if (!bindService(TSIntent, mTSConnection, BIND_AUTO_CREATE)) {
+        if (!bindService(service_manager.intent, mTSConnection, BIND_AUTO_CREATE)) {
             throw new IllegalStateException("Failed to bind to TermService!");
         }
     }
@@ -358,9 +360,8 @@ public class Term extends AppCompatActivity
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
 
-        if (mStopServiceOnFinish) {
-            stopService(TSIntent);
-        }
+        if (mStopServiceOnFinish)
+            service_manager.onDestroy(this);
         mTermService = null;
         mTSConnection = null;
         WifiLock.release();

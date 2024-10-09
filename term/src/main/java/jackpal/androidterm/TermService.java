@@ -65,10 +65,6 @@ public class TermService extends SessionsService {
     private final IBinder mTSBinder = new TSBinder();
     private CommandService command_service;
 
-    public static Intent start(Context context) {
-        return StartServiceCompat.start(context);
-    }
-
     private static Notification buildNotification(Context context) {
         NotificationChannelCompat.create(context);
 
@@ -201,30 +197,6 @@ public class TermService extends SessionsService {
         }
     }
 
-
-    private static class StartServiceCompat {
-        private static Intent start(Context context) {
-            Intent intent = new Intent(context, TermService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O /*API level 26*/)
-                Compat26.start(context, intent);
-            else
-                Compat.start(context, intent);
-            return intent;
-        }
-
-        @RequiresApi(26)
-        private static class Compat26 {
-            private static void start(Context context, Intent intent) {
-                context.startForegroundService(intent);
-            }
-        }
-
-        private static class Compat {
-            private static void start(Context context, Intent intent) {
-                context.startService(intent);
-            }
-        }
-    }
 
     private static class StopForeground {
         private static void stop(Service service) {

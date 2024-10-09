@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.termoneplus.remote.CommandCollector;
+import com.termoneplus.services.ServiceManager;
 import com.termoneplus.utils.ThemeManager;
 
 import androidx.annotation.NonNull;
@@ -35,11 +36,12 @@ import jackpal.androidterm.compat.PathCollector;
 
 
 public class RemoteActionActivity extends AppCompatActivity {
+    private final ServiceManager service_manager = new ServiceManager();
+
     private boolean path_collected = false;
     private TermService term_service = null;
     private boolean command_collected = false;
 
-    private Intent service_intent;
     private ServiceConnection service_connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -104,14 +106,14 @@ public class RemoteActionActivity extends AppCompatActivity {
             collector.start(this);
         }
 
-        service_intent = TermService.start(this);
+        service_manager.onCreate(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        if (!bindService(service_intent, service_connection, BIND_AUTO_CREATE)) {
+        if (!bindService(service_manager.intent, service_connection, BIND_AUTO_CREATE)) {
             Log.e(Application.APP_TAG, "bind to service failed!");
             finish();
         }
@@ -128,7 +130,7 @@ public class RemoteActionActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (term_service != null) {
             if (term_service.getSessionCount() == 0)
-                stopService(service_intent);
+                service_manager.onDestroy(this);
             term_service = null;
         }
         super.onDestroy();
