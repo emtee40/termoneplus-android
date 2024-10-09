@@ -204,7 +204,7 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         ArrayList<String> args = getArguments(in);
         if (args == null) return;
 
-        CommandCollector.writeCommandPath(args, out);
+        CommandCollector.writeCommandPath(service.getApplicationContext(), args, out);
         endResponse(out);
     }
 
@@ -212,7 +212,7 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         ArrayList<String> args = getArguments(in);
         if (args == null) return;
 
-        CommandCollector.writeCommandEnvironment(args, out);
+        CommandCollector.writeCommandEnvironment(service.getApplicationContext(), args, out);
         endResponse(out);
     }
 
@@ -220,7 +220,7 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         ArrayList<String> args = getArguments(in);
         if (args == null) return;
 
-        CommandCollector.openCommandConfiguration(args, out);
+        CommandCollector.openCommandConfiguration(service.getApplicationContext(), args, out);
     }
 
     // TODO @Deprecated
@@ -228,6 +228,6 @@ public class CommandService implements UnixSocketServer.ConnectionHandler {
         ArrayList<String> args = getArguments(in);
         if (args == null) return;
 
-        CommandCollector.legacyCommandDirectory(args, out);
+        CommandCollector.legacyCommandDirectory(service.getApplicationContext(), args, out);
     }
 }

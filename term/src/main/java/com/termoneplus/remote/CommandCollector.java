@@ -51,7 +51,7 @@ public class CommandCollector {
     private int pending = 0;
     private OnCommandsConnectedListener callback;
 
-    public static void writeCommandPath(@NonNull ArrayList<String> args, OutputStream out) {
+    public static void writeCommandPath(Context context, @NonNull ArrayList<String> args, OutputStream out) {
         //noinspection SizeReplaceableByIsEmpty
         if (args.size() < 1) return;
 
@@ -59,14 +59,14 @@ public class CommandCollector {
         CommandInfo info = list.get(cmd);
         if (info == null) return;
 
-        info.getPath(cmd);
+        info.getPath(context, cmd);
         if (info.path == null) return;
 
         PrintStream prn = new PrintStream(out);
         prn.println(info.path);
     }
 
-    public static void writeCommandEnvironment(@NonNull ArrayList<String> args, OutputStream out) {
+    public static void writeCommandEnvironment(Context context, @NonNull ArrayList<String> args, OutputStream out) {
         //noinspection SizeReplaceableByIsEmpty
         if (args.size() < 1) return;
 
@@ -74,7 +74,7 @@ public class CommandCollector {
         CommandInfo info = list.get(cmd);
         if (info == null) return;
 
-        info.getEnv(cmd);
+        info.getEnv(context, cmd);
         if (info.env == null) return;
 
         PrintStream prn = new PrintStream(out);
@@ -90,7 +90,7 @@ public class CommandCollector {
         prn.println("LD_LIBRARY_PATH=" + libpath);
     }
 
-    public static void openCommandConfiguration(@NonNull ArrayList<String> args, OutputStream out) {
+    public static void openCommandConfiguration(Context context, @NonNull ArrayList<String> args, OutputStream out) {
         if (args.size() < 2) return;
 
         String cmd = args.get(0);
@@ -98,7 +98,7 @@ public class CommandCollector {
         if (info == null) return;
 
         String path = args.get(1);
-        try (ParcelFileDescriptor pfd = info.openSysconfig(path)) {
+        try (ParcelFileDescriptor pfd = info.openSysconfig(context, path)) {
             if (pfd == null) return;
 
             FileDescriptor fd = pfd.getFileDescriptor();
@@ -115,14 +115,14 @@ public class CommandCollector {
     }
 
     // TODO @Deprecated
-    public static void legacyCommandDirectory(@NonNull ArrayList<String> args, OutputStream out) {
+    public static void legacyCommandDirectory(Context context, @NonNull ArrayList<String> args, OutputStream out) {
         if (args.size() < 2) return;
 
         String cmd = args.get(0);
         CommandInfo info = list.get(cmd);
         if (info == null) return;
 
-        String path = info.legacyCommandDirectory(args.get(1));
+        String path = info.legacyCommandDirectory(context, args.get(1));
         if (path == null) return;
 
         PrintStream prn = new PrintStream(out);
@@ -195,7 +195,7 @@ public class CommandCollector {
             this.app = app;
         }
 
-        private void getPath(String cmd) {
+        private void getPath(Context context, String cmd) {
             if (path != null) {
                 File exe = new File(path);
                 if (!exe.exists()) {
@@ -205,7 +205,7 @@ public class CommandCollector {
             }
             if (path != null) return;
 
-            ICommand remote = TrustedApplications.getRemote(app);
+            ICommand remote = getRemote(context);
             if (remote == null) return;
 
             {
@@ -217,10 +217,10 @@ public class CommandCollector {
             }
         }
 
-        private void getEnv(String cmd) {
+        private void getEnv(Context context, String cmd) {
             if (env != null) return;
 
-            ICommand remote = TrustedApplications.getRemote(app);
+            ICommand remote = getRemote(context);
             if (remote == null) return;
 
             {
@@ -232,8 +232,8 @@ public class CommandCollector {
             }
         }
 
-        private ParcelFileDescriptor openSysconfig(String path) {
-            ICommand remote = TrustedApplications.getRemote(app);
+        private ParcelFileDescriptor openSysconfig(Context context, String path) {
+            ICommand remote = getRemote(context);
             if (remote == null) return null;
 
             try {
@@ -244,8 +244,8 @@ public class CommandCollector {
         }
 
         // TODO @Deprecated
-        private String legacyCommandDirectory(String code) {
-            ICommand remote = TrustedApplications.getRemote(app);
+        private String legacyCommandDirectory(Context context, String code) {
+            ICommand remote = getRemote(context);
             if (remote == null) return null;
 
             try {
@@ -253,6 +253,10 @@ public class CommandCollector {
             } catch (RemoteException ignore) {
             }
             return null;
+        }
+
+        private ICommand getRemote(@SuppressWarnings("unused") Context context) {
+            return TrustedApplications.getRemote(app);
         }
     }
 }
