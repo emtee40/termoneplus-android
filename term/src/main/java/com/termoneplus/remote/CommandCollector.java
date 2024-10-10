@@ -155,7 +155,13 @@ public class CommandCollector {
         out.flush();
     }
 
-    public void start(Context context) {
+    public static void collect(Context context, OnCommandsConnectedListener listener) {
+        final CommandCollector collector = new CommandCollector();
+        collector.setOnCommandsConnectedListener(listener);
+        collector.start(context);
+    }
+
+    private void start(Context context) {
         pending = TrustedApplications.size();
         new Handler(Looper.getMainLooper()).post(() -> {
             for (String app : TrustedApplications.keySet()) {

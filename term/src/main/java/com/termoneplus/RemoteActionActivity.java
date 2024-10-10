@@ -87,24 +87,15 @@ public class RemoteActionActivity extends AppCompatActivity {
             msg.setText(R.string.app_collection_progress);
         }
 
-        // start path collection
-        {
-            PathCollector collector = new PathCollector();
-            collector.setOnPathsReceivedListener(() -> {
-                path_collected = true;
-                processIntent();
-            });
-            collector.start(this);
-        }
-        // start command collection
-        {
-            final CommandCollector collector = new CommandCollector();
-            collector.setOnCommandsConnectedListener(() -> {
-                command_collected = true;
-                processIntent();
-            });
-            collector.start(this);
-        }
+        PathCollector.collect(this, () -> {
+            path_collected = true;
+            processIntent();
+        });
+
+        CommandCollector.collect(this, () -> {
+            command_collected = true;
+            processIntent();
+        });
 
         service_manager.onCreate(this);
     }

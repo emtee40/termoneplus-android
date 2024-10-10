@@ -63,7 +63,13 @@ public class PathCollector {
         return ret;
     }
 
-    public void start (Context context) {
+    public static void collect(Context context, OnPathsReceivedListener listener) {
+        final PathCollector collector = new PathCollector();
+        collector.setOnPathsReceivedListener(listener);
+        collector.start(context);
+    }
+
+    private void start (Context context) {
         final PathSettings settings = new PathSettings(context);
         if (!PathSettings.usePathCollection()) {
             if (callback != null)

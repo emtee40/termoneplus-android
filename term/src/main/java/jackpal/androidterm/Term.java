@@ -264,20 +264,16 @@ public class Term extends AppCompatActivity
         mViewFlipper = findViewById(R.id.view_flipper);
 
         if (!path_collected) {
-            final PathCollector path_collector = new PathCollector();
-            path_collector.setOnPathsReceivedListener(() -> {
+            PathCollector.collect(this, () -> {
                 path_collected = true;
                 populateSessions();
             });
-            path_collector.start(this);
         }
         if (!command_collected) {
-            final CommandCollector collector = new CommandCollector();
-            collector.setOnCommandsConnectedListener(() -> {
+            CommandCollector.collect(this, () -> {
                 command_collected = true;
                 populateSessions();
             });
-            collector.start(this);
         }
 
         service_manager.onCreate(this);
