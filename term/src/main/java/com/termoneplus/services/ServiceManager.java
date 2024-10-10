@@ -16,9 +16,12 @@
 
 package com.termoneplus.services;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.IBinder;
 
 import androidx.annotation.RequiresApi;
 
@@ -27,15 +30,47 @@ import jackpal.androidterm.TermService;
 
 public class ServiceManager {
     public Intent intent;
+    private OnServiceConnectionListener listener;
+
+    private final ServiceConnection connection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            if (listener == null) return;
+            TermService.TSBinder binder = (TermService.TSBinder) service;
+            listener.onServiceConnection(binder.getService());
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            if (listener == null) return;
+            listener.onServiceConnection(null);
+        }
+    };
 
     public void onCreate(Context context) {
         intent = StartServiceCompat.start(context);
     }
 
+    public void onStart(Context context) {
+        if (!context.bindService(intent, connection, Context.BIND_AUTO_CREATE))
+            throw new IllegalStateException("Failed to bind to TermService!");
+    }
+
+    public void onStop(Context context) {
+        context.unbindService(connection);
+    }
+
     public void onDestroy(Context context) {
+        listener = null;
         context.stopService(intent);
     }
 
+    public void setOnServiceConnectionListener(OnServiceConnectionListener listener) {
+        this.listener = listener;
+    }
+
+
+    public interface OnServiceConnectionListener {
+        void onServiceConnection(TermService service);
+    }
 
     private static class StartServiceCompat {
         private static Intent start(Context context) {

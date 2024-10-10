@@ -16,11 +16,8 @@
 
 package com.termoneplus;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -42,24 +39,17 @@ public class RemoteActionActivity extends AppCompatActivity {
     private TermService term_service = null;
     private boolean command_collected = false;
 
-    private ServiceConnection service_connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            term_service = null;
-            if (service == null) return;
 
-            TermService.TSBinder binder = (TermService.TSBinder) service;
-            term_service = binder.getService();
-
+    private void onServiceConnection(TermService service) {
+        if (service != null) {
+            Log.i(Application.APP_TAG, "Action connected to TermService");
+            term_service = service;
             processIntent();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
+        } else {
+            Log.i(Application.APP_TAG, "Action disconnected from TermService");
             term_service = null;
         }
-    };
-
+    }
 
     @Override
     public void setTheme(int resid) {
@@ -104,15 +94,13 @@ public class RemoteActionActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (!bindService(service_manager.intent, service_connection, BIND_AUTO_CREATE)) {
-            Log.e(Application.APP_TAG, "bind to service failed!");
-            finish();
-        }
+        service_manager.setOnServiceConnectionListener(RemoteActionActivity.this::onServiceConnection);
+        service_manager.onStart(this);
     }
 
     @Override
     protected void onStop() {
-        unbindService(service_connection);
+        service_manager.onStop(this);
 
         super.onStop();
     }

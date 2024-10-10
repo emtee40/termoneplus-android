@@ -22,7 +22,6 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -178,18 +177,18 @@ public class Term extends AppCompatActivity
             }
         }
     };
-    private ServiceConnection mTSConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            Log.i(Application.APP_TAG, "Bound to TermService");
-            TermService.TSBinder binder = (TermService.TSBinder) service;
-            mTermService = binder.getService();
-            populateSessions();
-        }
 
-        public void onServiceDisconnected(ComponentName arg0) {
+    private void onServiceConnection(TermService service) {
+        if (service != null) {
+            Log.i(Application.APP_TAG, "Application connected to TermService");
+            mTermService = service;
+            populateSessions();
+        } else {
+            Log.i(Application.APP_TAG, "Application disconnected from TermService");
             mTermService = null;
         }
-    };
+    }
+
     private Handler mHandler;
 
     protected static TermSession createTermSession(Context context, String extraCommand) throws IOException {
@@ -292,9 +291,8 @@ public class Term extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        if (!bindService(service_manager.intent, mTSConnection, BIND_AUTO_CREATE)) {
-            throw new IllegalStateException("Failed to bind to TermService!");
-        }
+        service_manager.setOnServiceConnectionListener(Term.this::onServiceConnection);
+        service_manager.onStart(this);
     }
 
     private synchronized void populateSessions() {
@@ -359,7 +357,6 @@ public class Term extends AppCompatActivity
         if (mStopServiceOnFinish)
             service_manager.onDestroy(this);
         mTermService = null;
-        mTSConnection = null;
         WifiLock.release();
         WakeLock.release();
     }
@@ -478,7 +475,7 @@ public class Term extends AppCompatActivity
 
         mViewFlipper.removeAllViews();
 
-        unbindService(mTSConnection);
+        service_manager.onStop(this);
 
         super.onStop();
     }
