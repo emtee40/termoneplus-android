@@ -70,6 +70,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="disable_wifilock">WLAN-Abschaltung erlauben</string>
 
     <string name="path_collection_progress">Anwendungspfade werden abgefragt …</string>
+    <string name="app_collection_progress">Informationen anderer Apps werden abgefragt …</string>
 
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open">Navigationsleiste öffnen</string>
@@ -79,6 +80,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="message_external_storage_rationale">Zugriff auf Dateien im externen Speicher ist nicht erlaubt</string>
     <string name="message_external_storage_granted">Zugriff auf den externen Speicher wurde zugelassen</string>
     <string name="message_external_storage_not_granted">Zugriff auf den externen Speicher wurde abgelehnt</string>
+    <string name="message_all_files_access_rationale">Berechtigung »Zugriff auf alle Dateien«, damit alles im externen Speicher verwaltet werden kann</string>
 
     <!-- Context menu -->
     <string name="edit_text">Text bearbeiten</string>
